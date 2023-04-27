@@ -14,7 +14,7 @@ public class Program
         string connectionString = builder.Configuration.GetConnectionString("BOUNTY")!;
         builder.Services.AddDbContext<BountyContext>(options =>
         {
-            options.UseSqlServer(connectionString, connection => connection.MigrationsAssembly("ZORGATH"));
+            options.UseSqlServer(connectionString, connection => connection.MigrationsAssembly("SKELETON-KING"));
         });
 
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();
@@ -24,7 +24,8 @@ public class Program
             {
                 // NOTE: Please keep this list alphabetized by the string literal in the key.
                 {"autocompleteNicks", new AutoCompleteNicksHandler() },
-                {"pre_auth", new PreAuthHandler(srpAuthSessions) }
+                {"pre_auth", new PreAuthHandler(srpAuthSessions) },
+                {"srpAuth", new SrpAuthHandler(srpAuthSessions, new()) },
             }
         );
 

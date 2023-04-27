@@ -8,12 +8,7 @@ public class AutoCompleteNicksHandlerTest
     {
         ControllerContext controllerContext = new ControllerContextForTesting();
         using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
-        bountyContext.Accounts.Add(
-            new Account()
-            {
-                Name = "korDen",
-                User = new("", "", ""),
-            });
+        bountyContext.Accounts.Add(new Account(name: "korDen") { User = new() });
         await bountyContext.SaveChangesAsync();
 
         AutoCompleteNicksHandler handler = new();
@@ -34,23 +29,11 @@ public class AutoCompleteNicksHandlerTest
     {
         ControllerContext controllerContext = new ControllerContextForTesting();
         using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
-        ElementUser user = new("", "", "");
+        ElementUser user = new();
         bountyContext.Accounts.AddRange(
-            new Account()
-            {
-                Name = "korNy",
-                User = user,
-            },
-            new Account()
-            {
-                Name = "korDen",
-                User = user,
-            },
-            new Account()
-            {
-                Name = "mrhappyasthma",
-                User = user,
-            });
+            new Account(name: "korNy") { User = user },
+            new Account(name: "korDen") { User = user },
+            new Account(name: "mrhappyasthma") {  User = user });
         await bountyContext.SaveChangesAsync();
 
         AutoCompleteNicksHandler handler = new();
@@ -71,23 +54,13 @@ public class AutoCompleteNicksHandlerTest
     {
         ControllerContext controllerContext = new ControllerContextForTesting();
         using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
-        ElementUser user = new("", "", "");
+        ElementUser user = new();
         bountyContext.Accounts.AddRange(
-            new Account()
-            {
-                Name = "korDen",
-                User = user,
-            },
-            new Account()
-            {
-                Name = "mrhappyasthma",
-                User = user,
-            });
+            new Account(name: "korDen") { User = user },
+            new Account(name: "mrhappyasthma") { User = user });
         await bountyContext.SaveChangesAsync();
 
         AutoCompleteNicksHandler handler = new();
-
-
         Dictionary<string, string> formData = new()
         {
             ["nickname"] = "kor"
@@ -104,22 +77,13 @@ public class AutoCompleteNicksHandlerTest
     {
         ControllerContext controllerContext = new ControllerContextForTesting();
         using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
-        ElementUser user = new("", "", "");
+        ElementUser user = new();
         bountyContext.Accounts.AddRange(
-            new Account()
-            {
-                Name = "korDen",
-                User = user,
-            },
-            new Account()
-            {
-                Name = "mrhappyasthma",
-                User = user,
-            });
+            new Account(name: "korDen") { User = user },
+            new Account(name: "mrhappyasthma") { User = user });
         await bountyContext.SaveChangesAsync();
 
         AutoCompleteNicksHandler handler = new();
-
         Dictionary<string, string> formData = new()
         {
             ["nickname"] = "asdf"

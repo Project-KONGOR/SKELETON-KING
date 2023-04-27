@@ -6,7 +6,7 @@ public class ControllerContextForTesting : ControllerContext
     {
         SqliteConnection connection = new("Data Source=:memory:");
         ServiceCollection serviceCollection = new();
-        serviceCollection.AddDbContext<BountyContext>((sp, options) =>
+        serviceCollection.AddDbContextFactory<BountyContext>((sp, options) =>
         {
             options.UseSqlite(connection);
         });
@@ -23,8 +23,10 @@ public class ControllerContextForTesting : ControllerContext
 
         IFeatureCollection features = new FeatureCollection();
         features.Set<IServiceProvidersFeature>(serviceProvidersFeature);
-
         HttpContext = new DefaultHttpContext(features);
-        HttpContext.Connection.RemoteIpAddress = IPAddress.Parse("192.168.13.12");
+
+        // Make sure RemoteIpAddress is not null.
+        string arbitraryIpAdress = "192.168.13.12";
+        HttpContext.Connection.RemoteIpAddress = IPAddress.Parse(arbitraryIpAdress);
     }
 }

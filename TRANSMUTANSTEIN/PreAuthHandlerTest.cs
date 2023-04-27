@@ -34,12 +34,7 @@ public class PreAuthHandlerTest
         string passwordSalt = "b79bd4a832b46152f09ac9";
         string hashedPassword = "45b9467c354f712fa8b6175f6b6e82da5cb09a90fcfbda1e1d053dfc6aa41f5a";
         string verifier = "146de93c988381b36ae601f2b19834cca2a4c0834d8b1a93545d8ec4539e1eb20fb70659ea85c78bf2e9692ff0e8c0fb8e5a8d0d49c259172593a5955ce5f6a519486a87e11763da7853a77828ef5791fe002db90e4a82e67a6cfc701c2a41db3377cb732660cea572046bca8d03d29bfc049e0110996cdaf4dcd09882a20424f6cf92ea571693c953dba67417dfb560498d159d4d21805027d43b5b4688ab99c51d9c02c8c07c0d0ac4cef2bb753d63fc6d3cfe49755b49e698208a72468a7faae6fbda1542af014a2fa6b3c5b310acc0df49aa8f7034f3f8c0d47accedab805c0384cd35589bcabc0ffbf800b20bc08aee87f102bf47e9cc0aaeb91a22e272";
-        bountyContext.Accounts.Add(
-            new Account()
-            {
-                Name = login,
-                User = new(salt, passwordSalt, hashedPassword),
-            });
+        bountyContext.Accounts.Add(new Account(login) { User = new(salt, passwordSalt, hashedPassword, email: "e@mail.com") });
         await bountyContext.SaveChangesAsync();
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();
 
