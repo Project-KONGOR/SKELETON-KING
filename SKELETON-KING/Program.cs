@@ -26,6 +26,7 @@ public class Program
                 // NOTE: Please keep this list alphabetized by the string literal in the key.
                 {"autocompleteNicks", new AutoCompleteNicksHandler() },
                 {"pre_auth", new PreAuthHandler(srpAuthSessions) },
+                {"show_simple_stats", new ShowSimpleStatsHandler() },
                 {"srpAuth", new SrpAuthHandler(srpAuthSessions, new()) },
             }
         );
