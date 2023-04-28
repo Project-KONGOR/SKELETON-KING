@@ -1,6 +1,4 @@
-﻿using PhpSerializerNET;
-
-namespace ZORGATH;
+﻿namespace ZORGATH;
 
 /// <summary>
 ///     Response returned by the server when login fails.

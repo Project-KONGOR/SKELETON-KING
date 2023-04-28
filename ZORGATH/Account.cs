@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-
-namespace ZORGATH;
+﻿namespace ZORGATH;
 
 /// <summary>
 ///     An Entity Framework object representing a playable Account.

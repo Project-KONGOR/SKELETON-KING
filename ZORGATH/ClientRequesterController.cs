@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace ZORGATH;
+﻿namespace ZORGATH;
 
 [ApiController]
 [Route("client_requester.php")]

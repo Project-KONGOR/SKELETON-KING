@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ZORGATH;
-
-namespace TRANSMUTANSTEIN;
+﻿namespace TRANSMUTANSTEIN;
 
 [TestClass]
 public class ClientRequesterControllerTest

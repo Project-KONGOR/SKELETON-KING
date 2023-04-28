@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace ZORGATH;
+﻿namespace ZORGATH;
 
 /// <summary>
 ///    Interface for a `client_requester.php` function request handlers.

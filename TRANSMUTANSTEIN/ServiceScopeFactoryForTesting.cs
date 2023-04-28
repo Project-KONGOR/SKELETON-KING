@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.DependencyInjection;
-using ZORGATH;
-
-namespace TRANSMUTANSTEIN;
+﻿namespace TRANSMUTANSTEIN;
 
 // Custom IServiceScope that allows us to e.g inject custom BountyContext.
 class ServiceScopeForTesting : IServiceScope

@@ -1,6 +1,4 @@
-﻿using PhpSerializerNET;
-
-namespace ZORGATH;
+﻿namespace ZORGATH;
 
 [Serializable]
 public class PreAuthResponse

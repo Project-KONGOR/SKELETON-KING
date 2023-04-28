@@ -1,7 +1,4 @@
-﻿using SecureRemotePassword;
-using System.Security.Cryptography;
-
-namespace ZORGATH;
+﻿namespace ZORGATH;
 
 /// <summary>
 ///     A helper class for maintaining the state of an SRP authorisation.

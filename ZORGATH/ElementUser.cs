@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-
-namespace ZORGATH;
+﻿namespace ZORGATH;
 
 /// <summary>
 ///     An Entity Framework object representing an owner of one or more Accounts. Includes information shared by all

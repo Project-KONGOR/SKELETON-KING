@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Concurrent;
-using ZORGATH;
-
-namespace TRANSMUTANSTEIN;
+﻿namespace TRANSMUTANSTEIN;
 
 [TestClass]
 public class PreAuthHandlerTest
