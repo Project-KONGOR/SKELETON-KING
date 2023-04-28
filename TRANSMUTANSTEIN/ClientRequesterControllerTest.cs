@@ -42,7 +42,7 @@ public class ClientRequesterControllerTest
     [TestMethod]
     public async Task UnknownRequest()
     {
-        ClientRequesterController controller = new(new Dictionary<string,IClientRequesterHandler>());
+        ClientRequesterController controller = new(new Dictionary<string, IClientRequesterHandler>());
         Dictionary<string, string> formData = new()
         {
             ["f"] = "test2"

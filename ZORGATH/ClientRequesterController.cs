@@ -8,7 +8,7 @@ public class ClientRequesterController : ControllerBase
 {
     private readonly IReadOnlyDictionary<string, IClientRequesterHandler> _clientRequesterHandlers;
 
-    public ClientRequesterController(IReadOnlyDictionary<string,IClientRequesterHandler> clientRequesterHandlers)
+    public ClientRequesterController(IReadOnlyDictionary<string, IClientRequesterHandler> clientRequesterHandlers)
     {
         _clientRequesterHandlers = clientRequesterHandlers;
     }

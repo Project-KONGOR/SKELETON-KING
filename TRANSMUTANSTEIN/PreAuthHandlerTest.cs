@@ -57,7 +57,7 @@ public class PreAuthHandlerTest
         };
 
         IActionResult result = await preAuthHandler.HandleRequest(controllerContext, formData);
-        
+
         // Should be a successful response.
         Assert.IsInstanceOfType(result, typeof(OkObjectResult));
 
