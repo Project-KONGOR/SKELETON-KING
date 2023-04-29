@@ -6,13 +6,9 @@ public class PreAuthHandlerTest
     [TestMethod]
     public async Task PreAuthHandlerTest_AccountNotFound()
     {
-
-        IServiceScopeFactory serviceScopeFactory = new ServiceScopeFactoryForTesting();
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();
 
-        PreAuthHandler preAuthHandler = new(serviceScopeFactory, srpAuthSessions);
-        ControllerContext controllerContext = new();
-
+        PreAuthHandler preAuthHandler = new(srpAuthSessions);
         Dictionary<string, string> formData = new()
         {
             ["login"] = "test",
@@ -20,7 +16,7 @@ public class PreAuthHandlerTest
             ["A"] = "4357180a10ca7393e09aadfbe43c807b3564a3b3916a3d48255e360b7ff7a7a1e5dd7616e2879d1c45d039a8f7bb84b29cd2195f79595608e654c89a2feceeb888ec117799b826d12ce8ec65937ba8b9a82998e3cdf049fda673a774e66977137540847ee359f09a4edcfcc9d2c7a8ea2b48e00b71db8e36e70e856c0dc0f2fc818710f54143a07fef459fa528a20d5fa55a4cce0ef8700a1926dd262f45aae0b270468dec3b4a212dc596ce9fcd1c149d392eebe98406ef5e250bcf509c819cad9af6e5dad4721ee845446c30d9f0b3c58e2f94cfe19c5d064d2e4cf2193efb71d1f752360655d3dd0aff327e73e12ef019e51b3cd14329b2f0aa7ebd96dd4b"
         };
 
-        var result = await preAuthHandler.HandleRequest(controllerContext, formData);
+        IActionResult result = await preAuthHandler.HandleRequest(new ControllerContextForTesting(), formData);
         Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
         Assert.AreEqual("a:2:{s:4:\"auth\";s:17:\"Account Not Found\";i:0;b:0;}", ((ObjectResult)result).Value);
     }
@@ -28,8 +24,8 @@ public class PreAuthHandlerTest
     [TestMethod]
     public async Task PreAuthHandlerTest_AccountIsFound()
     {
-        ServiceScopeFactoryForTesting serviceScopeFactory = new();
-        using var bountyContext = serviceScopeFactory.CreateScope().ServiceProvider.GetService<BountyContext>()!;
+        ControllerContext controllerContext = new ControllerContextForTesting();
+        using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
 
         string login = "login";
         // Precomputed Values: https://pastebin.com/c0TTziD6
@@ -47,9 +43,7 @@ public class PreAuthHandlerTest
         await bountyContext.SaveChangesAsync();
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();
 
-        PreAuthHandler preAuthHandler = new(serviceScopeFactory, srpAuthSessions);
-        ControllerContext controllerContext = new();
-
+        PreAuthHandler preAuthHandler = new(srpAuthSessions);
         Dictionary<string, string> formData = new()
         {
             ["login"] = login,

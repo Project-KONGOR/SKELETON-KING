@@ -9,19 +9,16 @@ public record AccountInfo(string Salt, string PasswordSalt, string HashedPasswor
 /// </summary>
 public class PreAuthHandler : IClientRequesterHandler
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ConcurrentDictionary<string, SrpAuthSessionData> _srpAuthSessions;
 
-    public PreAuthHandler(IServiceScopeFactory serviceScopeFactory, ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions)
+    public PreAuthHandler(ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions)
     {
-        _serviceScopeFactory = serviceScopeFactory;
         _srpAuthSessions = srpAuthSessions;
     }
 
     public async Task<IActionResult> HandleRequest(ControllerContext controllerContext, Dictionary<string, string> formData)
     {
-        using var serviceScope = _serviceScopeFactory.CreateScope();
-        using var bountyContext = serviceScope.ServiceProvider.GetService<BountyContext>()!;
+        using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
         string login = formData["login"];
 
         SrpAuthSessionData? srpAuthSessionData = await bountyContext.Accounts
