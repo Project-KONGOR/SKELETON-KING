@@ -30,4 +30,10 @@ public class ElementUser : IdentityUser
 
     [Required]
     public string HashedPassword { get; set; }
+
+    [Required]
+    /// <summary>
+    ///     The list of accounts associated with this user. This include any sub-accounts the user may have.
+    /// </summary>
+    public ICollection<Account> Accounts { get; set; } = new List<Account>();
 }

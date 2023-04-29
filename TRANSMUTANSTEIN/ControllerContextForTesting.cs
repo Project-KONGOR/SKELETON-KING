@@ -14,6 +14,7 @@ public class ControllerContextForTesting : ControllerContext
             options.UseInMemoryDatabase(identifier, inMemoryDatabaseRoot, b => b.EnableNullChecks(false));
             options.UseInternalServiceProvider(sp);
         });
+        serviceCollection.AddSingleton<ICookieValidator, CookieValidator>();
 
         ServiceProvidersFeature serviceProvidersFeature = new()
         {

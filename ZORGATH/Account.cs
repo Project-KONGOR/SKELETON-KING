@@ -16,4 +16,10 @@ public class Account
     [Required]
     // This is a transition property, automatically initialized by EF. Never null.
     public ElementUser User { get; set; } = null!;
+
+    [StringLength(32)]
+    /// <summary>
+    ///     The session cookie for the user's account.
+    /// </summary>
+    public string? Cookie { get; set; }
 }
