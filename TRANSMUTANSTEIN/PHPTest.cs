@@ -1,16 +1,16 @@
 ﻿namespace TRANSMUTANSTEIN;
 
-[TestClass]
+[TestFixture]
 public class PHPTest
 {
-    [TestMethod]
+    [Test]
     public void SerializeBasicObject()
     {
         AuthFailedResponse? authFailedResponse = new(AuthFailureReason.AccountNotFound);
         Assert.AreEqual("a:2:{s:4:\"auth\";s:17:\"Account Not Found\";i:0;b:0;}", PHP.Serialize(authFailedResponse));
     }
 
-    [TestMethod]
+    [Test]
     public void SerializeObjectObjectDictionary()
     {
         Dictionary<object, object> dictionary = new()
@@ -26,7 +26,7 @@ public class PHPTest
             PHP.Serialize(dictionary));
     }
 
-    [TestMethod]
+    [Test]
     public void SerializeStringObjectDictionary()
     {
         Dictionary<string, object?> dictionary = new()
@@ -47,7 +47,7 @@ public class PHPTest
             PHP.Serialize(dictionary));
     }
 
-    [TestMethod]
+    [Test]
     public void SerializeStringStringDictionary()
     {
         Dictionary<string, string>? dictionary = new()
@@ -71,7 +71,7 @@ public class PHPTest
         public readonly object? o = null;
     }
 
-    [TestMethod]
+    [Test]
     public void NullableProperties()
     {
         Assert.AreEqual(
@@ -79,7 +79,7 @@ public class PHPTest
             PHP.Serialize(new Nullable()));
     }
 
-    [TestMethod]
+    [Test]
     public void ComplexDictionaryTypes()
     {
         Dictionary<int, long> dictionary = new()
@@ -89,7 +89,7 @@ public class PHPTest
         Assert.AreEqual("a:1:{i:123;i:321;}", PHP.Serialize(dictionary));
     }
 
-    [TestMethod]
+    [Test]
     public void ListOfStrings()
     {
         List<string> list = new()
@@ -99,7 +99,7 @@ public class PHPTest
         Assert.AreEqual("a:1:{i:0;s:5:\"hello\";}", PHP.Serialize(list));
     }
 
-    [TestMethod]
+    [Test]
     public void ListOfInts()
     {
         List<int> list = new()

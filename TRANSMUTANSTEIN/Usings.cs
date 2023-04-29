@@ -5,8 +5,11 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Storage;
 global using Microsoft.Extensions.DependencyInjection;
-global using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endregion
+
+# region NUnit Using Directives
+global using NUnit.Framework;
+# endregion
 
 #region System Using Directives
 global using System.Collections.Concurrent;

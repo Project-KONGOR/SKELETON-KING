@@ -1,9 +1,9 @@
 ﻿namespace TRANSMUTANSTEIN;
 
-[TestClass]
+[TestFixture]
 public class PreAuthHandlerTest
 {
-    [TestMethod]
+    [Test]
     public async Task PreAuthHandlerTest_AccountNotFound()
     {
 
@@ -21,11 +21,11 @@ public class PreAuthHandlerTest
         };
 
         var result = await preAuthHandler.HandleRequest(controllerContext, formData);
-        Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        Assert.IsInstanceOf<NotFoundObjectResult>(result);
         Assert.AreEqual("a:2:{s:4:\"auth\";s:17:\"Account Not Found\";i:0;b:0;}", ((ObjectResult)result).Value);
     }
 
-    [TestMethod]
+    [Test]
     public async Task PreAuthHandlerTest_AccountIsFound()
     {
         ServiceScopeFactoryForTesting serviceScopeFactory = new();
@@ -59,7 +59,7 @@ public class PreAuthHandlerTest
         IActionResult result = await preAuthHandler.HandleRequest(controllerContext, formData);
 
         // Should be a successful response.
-        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        Assert.IsInstanceOf<OkObjectResult>(result);
 
         // Should cache SrpAuthSessionData for srpAuth to pick up.
         SrpAuthSessionData actualSrpAuthSessionData = srpAuthSessions[login];

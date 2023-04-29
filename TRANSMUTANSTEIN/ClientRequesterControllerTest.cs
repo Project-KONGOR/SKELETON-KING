@@ -1,6 +1,6 @@
 ﻿namespace TRANSMUTANSTEIN;
 
-[TestClass]
+[TestFixture]
 public class ClientRequesterControllerTest
 {
     private class TestClientRequesterHandler : IClientRequesterHandler
@@ -17,7 +17,7 @@ public class ClientRequesterControllerTest
         }
     }
 
-    [TestMethod]
+    [Test]
     public async Task HandlerIsInvoked()
     {
         IActionResult expected = new OkResult();
@@ -39,7 +39,7 @@ public class ClientRequesterControllerTest
         Assert.AreSame(expected, actual);
     }
 
-    [TestMethod]
+    [Test]
     public async Task UnknownRequest()
     {
         ClientRequesterController controller = new(new Dictionary<string, IClientRequesterHandler>());
@@ -50,10 +50,10 @@ public class ClientRequesterControllerTest
 
         // Trigger an unknown request.
         var actual = await controller.ClientRequester(formData);
-        Assert.IsInstanceOfType(actual, typeof(BadRequestObjectResult));
+        Assert.IsInstanceOf<BadRequestObjectResult>(actual);
     }
 
-    [TestMethod]
+    [Test]
     public async Task UnspecifiedRequest()
     {
         ClientRequesterController controller = new(new Dictionary<string, IClientRequesterHandler>());
@@ -61,6 +61,6 @@ public class ClientRequesterControllerTest
 
         // Trigger an unspecified request.
         var actual = await controller.ClientRequester(formData);
-        Assert.IsInstanceOfType(actual, typeof(BadRequestObjectResult));
+        Assert.IsInstanceOf<BadRequestObjectResult>(actual);
     }
 }
