@@ -22,7 +22,8 @@ public class Program
         builder.Services.AddSingleton<IReadOnlyDictionary<string, IClientRequesterHandler>>(
             new Dictionary<string, IClientRequesterHandler>()
             {
-                {"pre_auth", new PreAuthHandler(srpAuthSessions) },
+                {"autocompleteNicks", new AutoCompleteNicksHandler() },
+                {"pre_auth", new PreAuthHandler(srpAuthSessions) }
             }
         );
 
