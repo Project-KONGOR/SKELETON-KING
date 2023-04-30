@@ -1,4 +1,6 @@
-﻿namespace TRANSMUTANSTEIN;
+﻿using System.Linq.Expressions;
+
+namespace TRANSMUTANSTEIN;
 
 [TestClass]
 public class CookieValidatorTest
@@ -9,17 +11,23 @@ public class CookieValidatorTest
     public void SetUp()
     {
         ControllerContext = new ControllerContextForTesting();
-        using BountyContext bountyContext = ControllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
+        BountyContext bountyContext = ControllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
         Account account = EntityCreation.CreateFakeAccountAndSave("some username", bountyContext);
-        account.Cookie = "cookie";
-        bountyContext.SaveChanges();
+    }
+
+    [TestCleanup]
+    public void TearDown()
+    {
+        BountyContext bountyContext = ControllerContext!.HttpContext.RequestServices.GetRequiredService<BountyContext>();
+        bountyContext.Dispose();
     }
 
     [TestMethod]
     public async Task ValidateSessionCookie()
     {
-        ICookieValidator validator = ControllerContext!.HttpContext.RequestServices.GetRequiredService<ICookieValidator>();
-        Account? account = await validator.ValidateSessionCookie("cookie");
+        BountyContext bountyContext = ControllerContext!.HttpContext.RequestServices.GetRequiredService<BountyContext>();
+
+        Account? account = await CookieValidator.ValidateSessionCookie(bountyContext.Accounts, "cookie");
 
         Assert.IsNotNull(account);
         Assert.AreEqual(1, account!.AccountId);
@@ -28,9 +36,9 @@ public class CookieValidatorTest
     [TestMethod]
     public async Task ValidateSessionCookie_FailsForInvalidCookie()
     {
-        ICookieValidator validator = ControllerContext!.HttpContext.RequestServices.GetRequiredService<ICookieValidator>();
+        BountyContext bountyContext = ControllerContext!.HttpContext.RequestServices.GetRequiredService<BountyContext>();
 
-        Account? account = await validator.ValidateSessionCookie("nonexistent cookie");
+        Account? account = await CookieValidator.ValidateSessionCookie(bountyContext.Accounts, "nonexistent cookie");
 
         Assert.IsNull(account);
     }
@@ -38,9 +46,9 @@ public class CookieValidatorTest
     [TestMethod]
     public async Task ValidateSessionCookieForAccount()
     {
-        ICookieValidator validator = ControllerContext!.HttpContext.RequestServices.GetRequiredService<ICookieValidator>();
+        BountyContext bountyContext = ControllerContext!.HttpContext.RequestServices.GetRequiredService<BountyContext>();
 
-        Account? account = await validator.ValidateSessionCookieForAccountId("cookie", "1");
+        Account? account = await CookieValidator.ValidateSessionCookie(bountyContext.Accounts, "cookie", accountId: "1");
 
         Assert.IsNotNull(account);
     }
@@ -48,9 +56,9 @@ public class CookieValidatorTest
     [TestMethod]
     public async Task ValidateSessionCookieForAccount_FailsForInvalidCookie()
     {
-        ICookieValidator validator = ControllerContext!.HttpContext.RequestServices.GetRequiredService<ICookieValidator>();
+        BountyContext bountyContext = ControllerContext!.HttpContext.RequestServices.GetRequiredService<BountyContext>();
 
-        Account? account = await validator.ValidateSessionCookieForAccountId("nonexistent cookie", "1");
+        Account? account = await CookieValidator.ValidateSessionCookie(bountyContext.Accounts, "nonexistent cookie", accountId: "1");
 
         Assert.IsNull(account);
     }
@@ -58,10 +66,27 @@ public class CookieValidatorTest
     [TestMethod]
     public async Task ValidateSessionCookieForAccount_FailsForInvalidAccountId()
     {
-        ICookieValidator validator = ControllerContext!.HttpContext.RequestServices.GetRequiredService<ICookieValidator>();
+        BountyContext bountyContext = ControllerContext!.HttpContext.RequestServices.GetRequiredService<BountyContext>();
 
-        Account? account = await validator.ValidateSessionCookieForAccountId("cookie", "5");  // Actual ID is "1".
+        Account? account = await CookieValidator.ValidateSessionCookie(bountyContext.Accounts, "nonexistent cookie", accountId: "5"); // Actual ID is "1".
 
         Assert.IsNull(account);
+    }
+
+    [TestMethod]
+    public async Task ValidateSessionCookieForAccount_CustomIncludes()
+    {
+        BountyContext bountyContext = ControllerContext!.HttpContext.RequestServices.GetRequiredService<BountyContext>();
+        List<Expression<Func<Account, object>>> includes = new()
+        {
+            (Account a) => a.User
+        };
+
+        Account? account = await CookieValidator.ValidateSessionCookie(bountyContext.Accounts, "cookie", includes: includes);
+
+        Assert.IsNotNull(account);
+
+        // NOTE: The mock DB always loads navigational entites and I could not find a way to verify that the include actually works.
+        // I did verify it manually, but if someone finds a way to do this in a unit test we should update this.
     }
 }

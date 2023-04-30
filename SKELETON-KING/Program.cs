@@ -19,7 +19,6 @@ public class Program
 
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();
 
-        builder.Services.AddSingleton<ICookieValidator, CookieValidator>();
         builder.Services.AddSingleton<IReadOnlyDictionary<string, IClientRequesterHandler>>(
             new Dictionary<string, IClientRequesterHandler>()
             {

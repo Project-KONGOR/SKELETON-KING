@@ -21,6 +21,7 @@ public class EntityCreation
         {
             Name = name,
             User = user,
+            Cookie = "cookie",
         };
 
         user.Accounts.Add(account);
