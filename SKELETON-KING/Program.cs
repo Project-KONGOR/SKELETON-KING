@@ -23,7 +23,8 @@ public class Program
             new Dictionary<string, IClientRequesterHandler>()
             {
                 // NOTE: Please keep this list alphabetized by the string literal in the key.
-                {"pre_auth", new PreAuthHandler(srpAuthSessions) },
+                {"autocompleteNicks", new AutoCompleteNicksHandler() },
+                {"pre_auth", new PreAuthHandler(srpAuthSessions) }
             }
         );
 
