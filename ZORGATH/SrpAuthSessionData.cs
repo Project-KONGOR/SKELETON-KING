@@ -12,7 +12,7 @@ public class SrpAuthSessionData
 
     public const string g = "2";
 
-    public SrpAuthSessionData(string loginName, string clientPublicEphemeral, string salt, string passwordSalt, string hashedPassword)
+    public SrpAuthSessionData(string loginName, string clientPublicEphemeral, string salt, string passwordSalt, string hashedPassword, AccountDetails accountDetails)
     {
         ClientPublicEphemeral = clientPublicEphemeral;
         Salt = salt;
@@ -25,15 +25,18 @@ public class SrpAuthSessionData
 
         SrpServer srpServer = new(parameters);
         ServerEphemeral = srpServer.GenerateEphemeral(Verifier);
+
+        AccountDetails = accountDetails;
     }
 
-    public SrpAuthSessionData(string clientPublicEphemeral, string salt, string passwordSalt, string verifier, SrpEphemeral serverEphemeral)
+    public SrpAuthSessionData(string clientPublicEphemeral, string salt, string passwordSalt, string verifier, SrpEphemeral serverEphemeral, AccountDetails accountDetails)
     {
         ClientPublicEphemeral = clientPublicEphemeral;
         Salt = salt;
         PasswordSalt = passwordSalt;
         Verifier = verifier;
         ServerEphemeral = serverEphemeral;
+        AccountDetails = accountDetails;
     }
 
     /**
@@ -59,4 +62,9 @@ public class SrpAuthSessionData
     public readonly string PasswordSalt;
 
     public readonly string Verifier;
+
+    /**
+     * Account data required for successfully completing arpAuth request.
+     */
+    public readonly AccountDetails AccountDetails;
 }

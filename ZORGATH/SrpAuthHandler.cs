@@ -26,59 +26,10 @@ public class SrpAuthHandler : IClientRequesterHandler
             return new UnauthorizedObjectResult(PHP.Serialize(new AuthFailedResponse(AuthFailureReason.IncorrectPassword)));
         }
 
+        AccountDetails accountDetails = srpAuthSessionData.AccountDetails;
+
         // Load data for the account.
-        // TODO: load that as part of preAuth to avoid an extra query?
         using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
-        AccountDetails? accountDetails = await bountyContext.Accounts
-            .Where(account => account.Name == login)
-            .Select(account => new AccountDetails(
-                account.AccountId,
-                account.Name,
-                account.AccountType,
-                account.SelectedUpgradeCodes,
-                account.AutoConnectChatChannels,
-                account.IgnoredList,
-
-                // TODO: query stats too.
-                new AccountStats(
-                    /* level: */ 0,
-                    /* levelExp: */ 0,
-                    /* psr: */ 1500,
-                    /* normalRankedGamesMMR: */ 1500,
-                    /* casualModeMMR: */ 1500,
-                    /* publicGamesPlayed: */ 0,
-                    /* normalRankedGamesPlayed: */ 0,
-                    /* casualModeGamesPlayed: */ 0,
-                    /* midWarsGamesPlayed: */ 0,
-                    /* allOtherGamesPlayed: */ 0,
-                    /* publicGameDisconnects: */ 0,
-                    /* normalRankedGameDisconnects: */ 0,
-                    /* casualModeDisconnects: */ 0,
-                    /* midWarsTimesDisconnected: */ 0,
-                    /* allOtherGameDisconnects: */ 0),
-
-                // Clan information.
-                account.Clan!.ClanId,
-                account.Clan!.Name,
-                account.Clan!.Tag,
-                account.ClanTier,
-
-                // TODO: CloudStorage.
-                /* useCloud: */ false,
-                /* cloudAutoUpload: */ false,
-
-                // User-specific information.
-                account.User.Id,
-                account.User.Email!,
-                account.User.GoldCoins,
-                account.User.SilverCoins,
-                account.User.UnlockedUpgradeCodes
-            ))
-            .FirstOrDefaultAsync();
-        if (accountDetails is null)
-        {
-            return new NotFoundObjectResult(PHP.Serialize(new AuthFailedResponse(AuthFailureReason.AccountNotFound)));
-        }
         await accountDetails.Load(bountyContext);
 
         // Generate a new cookie for the Account.
