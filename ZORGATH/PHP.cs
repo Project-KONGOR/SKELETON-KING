@@ -1,5 +1,8 @@
 ﻿namespace ZORGATH;
 
+using System.Collections.Generic;
+using System.Linq;
+
 /// <summary>
 /// Custom PHP serialization library that focuses on performance while fixing some of the issues that PhpSerializerNET has:
 ///     - inability to serialize floats.
@@ -29,6 +32,10 @@ public class PHP
         else if (type == typeof(double)) { serializer = new DoubleSerializer(); }
         else if (type == typeof(float)) { serializer = new FloatSerializer(); }
         else if (type == typeof(long)) { serializer = new LongSerializer(); }
+        else if (type.IsEnum)
+        {
+            serializer = new EnumSerializer();
+        }
 
         else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
         {
@@ -58,20 +65,30 @@ public class PHP
 
             // Specialize for common types.
             if (keyType == typeof(string)) serializer = new HashSetStringSerializer();
-            else serializer = new CollectionObjectSerializer();
+            else serializer = new EnumerableObjectSerializer();
         }
-        else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ICollection<>))
+        // ICollection
+        else if (type.IsGenericType && type.GetInterfaces().Any(x => x == typeof(ICollection)))
         {
-            // should not get here!
             Type keyType = type.GetGenericArguments()[0];
-
-            // Specialize for common types.
             if (keyType == typeof(string)) serializer = new CollectionStringSerializer();
             else serializer = new CollectionObjectSerializer();
+        }
+        // IEnumerable
+        else if (type.IsGenericType && type.GetInterfaces().Any(x => x == typeof(IEnumerable)))
+        {
+            Type keyType = type.GetGenericArguments()[0];
+            if (keyType == typeof(string)) serializer = new EnumerableStringSerializer();
+            else serializer = new EnumerableObjectSerializer();
         }
         else if (type.IsGenericType)
         {
             throw new Exception("unsupported generic type");
+        }
+        else if (type.IsArray)
+        {
+            if (type.GetElementType() == typeof(string)) serializer = new ArrayStringSerializer();
+            else serializer = new ArrayObjectSerializer();
         }
 
         else
@@ -83,6 +100,12 @@ public class PHP
             {
                 foreach (FieldInfo fieldInfo in typeInfo!.DeclaredFields)
                 {
+                    // Ignore static fields.
+                    if (fieldInfo.Attributes.HasFlag(FieldAttributes.Static))
+                    {
+                        continue;
+                    }
+                    
                     string? name = null;
                     bool isInteger = false;
                     long key = 0;
@@ -104,6 +127,12 @@ public class PHP
 
                 foreach (PropertyInfo propertyInfo in typeInfo.DeclaredProperties)
                 {
+                    // Ignore static properties.
+                    if (propertyInfo.GetGetMethod(nonPublic: true)!.IsStatic)
+                    {
+                        continue;
+                    }
+
                     string? name = null;
                     bool isInteger = false;
                     long key = 0;
@@ -134,7 +163,7 @@ public class PHP
     {
         sb.Append('s');
         sb.Append(':');
-        sb.Append(value.Length);
+        sb.Append(Encoding.UTF8.GetByteCount(value));
         sb.Append(':');
         sb.Append('"');
         sb.Append(value);
@@ -168,7 +197,7 @@ public class PHP
 
     private static void AppendFloat(StringBuilder sb, double value)
     {
-        sb.Append('f');
+        sb.Append('d');
         sb.Append(':');
         sb.Append(value);
         sb.Append(';');
@@ -238,6 +267,13 @@ public class PHP
     private class LongSerializer : ISerializer
     {
         public void Serialize(StringBuilder sb, object data) { AppendLong(sb, (long)data); }
+    }
+    private class EnumSerializer : ISerializer
+    {
+        public void Serialize(StringBuilder sb, object data) {
+            IConvertible e = (IConvertible) data;
+            AppendInt(sb, e.ToInt32(null));
+        }
     }
 
     private class ListObjectSerializer : ISerializer
@@ -315,6 +351,60 @@ public class PHP
         }
     }
 
+    private class ArrayStringSerializer : ISerializer
+    {
+        public void Serialize(StringBuilder sb, object data)
+        {
+            string[] value = (string[])data;
+            sb.Append('a');
+            sb.Append(':');
+            sb.Append(value.Length);
+            sb.Append(':');
+            sb.Append('{');
+
+            int i = 0;
+            foreach (string entryValue in value)
+            {
+                AppendInt(sb, i);
+                AppendString(sb, entryValue);
+                ++i;
+            }
+
+            sb.Append('}');
+        }
+    }
+
+    private class ArrayObjectSerializer : ISerializer
+    {
+        public void Serialize(StringBuilder sb, object data)
+        {
+            object[] value = (object[])data;
+            sb.Append('a');
+            sb.Append(':');
+            sb.Append(value.Length);
+            sb.Append(':');
+            sb.Append('{');
+
+            int i = 0;
+            foreach (object? entryValue in value)
+            {
+                AppendInt(sb, i);
+                if (entryValue == null)
+                {
+                    sb.Append('N');
+                    sb.Append(';');
+
+                    continue;
+                }
+
+                GetSerializerByType(entryValue.GetType()).Serialize(sb, entryValue);
+                ++i;
+            }
+
+            sb.Append('}');
+        }
+    }
+
     private class CollectionStringSerializer : ISerializer
     {
         public void Serialize(StringBuilder sb, object data)
@@ -342,10 +432,83 @@ public class PHP
     {
         public void Serialize(StringBuilder sb, object data)
         {
-            ICollection<object?> value = (ICollection<object?>)data;
+            ICollection value = (ICollection)data;
             sb.Append('a');
             sb.Append(':');
             sb.Append(value.Count);
+            sb.Append(':');
+            sb.Append('{');
+
+            int i = 0;
+            foreach (object? entryValue in value)
+            {
+                AppendInt(sb, i);
+                if (entryValue == null)
+                {
+                    sb.Append('N');
+                    sb.Append(';');
+
+                    continue;
+                }
+
+                GetSerializerByType(entryValue.GetType()).Serialize(sb, entryValue);
+                ++i;
+            }
+
+            sb.Append('}');
+        }
+    }
+
+    private class EnumerableStringSerializer : ISerializer
+    {
+        public void Serialize(StringBuilder sb, object data)
+        {
+            IEnumerable<string> value = (IEnumerable<string>)data;
+            sb.Append('a');
+            sb.Append(':');
+            sb.Append(value.Count());
+            sb.Append(':');
+            sb.Append('{');
+
+            int i = 0;
+            foreach (object? entryValue in value)
+            {
+                AppendInt(sb, i);
+                if (entryValue == null)
+                {
+                    sb.Append('N');
+                    sb.Append(';');
+
+                    continue;
+                }
+
+                GetSerializerByType(entryValue.GetType()).Serialize(sb, entryValue);
+                ++i;
+            }
+
+            sb.Append('}');
+        }
+    }
+
+    private class EnumerableObjectSerializer : ISerializer
+    {
+        private static int Count(IEnumerable enumerable)
+        {
+            if (enumerable is ICollection col)
+            {
+                return col.Count;
+            }
+            int result = 0;
+            IEnumerator enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext()) result++;
+            return result;
+        }
+        public void Serialize(StringBuilder sb, object data)
+        {
+            IEnumerable value = (IEnumerable)data;
+            sb.Append('a');
+            sb.Append(':');
+            sb.Append(Count(value));
             sb.Append(':');
             sb.Append('{');
 
@@ -474,14 +637,23 @@ public class PHP
 
         public void Serialize(StringBuilder sb, object data)
         {
+            int numNonNullProperties = 0;
+            foreach (Property property in Properties)
+            {
+                var propertyInfo = property.PropertyInfo;
+                object? value = propertyInfo != null ? propertyInfo.GetValue(data) : property.FieldInfo!.GetValue(data);
+                if (value != null) ++numNonNullProperties;
+            }
+
             sb.Append("a:");
-            sb.Append(Properties.Count);
+            sb.Append(numNonNullProperties);
             sb.Append(":{");
 
             foreach (Property property in Properties)
             {
                 var propertyInfo = property.PropertyInfo;
                 object? value = propertyInfo != null ? propertyInfo.GetValue(data) : property.FieldInfo!.GetValue(data);
+                if (value == null) continue;
 
                 if (property.CustomName != null) { AppendString(sb, property.CustomName); }
                 else if (property.IsInteger)
@@ -493,16 +665,7 @@ public class PHP
                 }
                 else { AppendString(sb, property.Name); }
 
-                if (value == null)
-                {
-                    sb.Append('N');
-                    sb.Append(';');
-                    continue;
-                }
-                else
-                {
-                    GetSerializerByType(value.GetType()).Serialize(sb, value);
-                }
+                GetSerializerByType(value.GetType()).Serialize(sb, value);
             }
 
             sb.Append('}');
