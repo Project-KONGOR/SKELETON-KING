@@ -4,15 +4,11 @@ public class ControllerContextForTesting : ControllerContext
 {
     public ControllerContextForTesting()
     {
-        string identifier = Guid.NewGuid().ToString();
-        InMemoryDatabaseRoot inMemoryDatabaseRoot = new();
-
+        SqliteConnection connection = new("Data Source=:memory:");
         ServiceCollection serviceCollection = new();
-        serviceCollection.AddEntityFrameworkInMemoryDatabase();
         serviceCollection.AddDbContext<BountyContext>((sp, options) =>
         {
-            options.UseInMemoryDatabase(identifier, inMemoryDatabaseRoot, b => b.EnableNullChecks(false));
-            options.UseInternalServiceProvider(sp);
+            options.UseSqlite(connection);
         });
 
         ServiceProvidersFeature serviceProvidersFeature = new()
@@ -20,9 +16,15 @@ public class ControllerContextForTesting : ControllerContext
             RequestServices = serviceCollection.BuildServiceProvider()
         };
 
+        // Apparently required to create schema.
+        BountyContext bountyContext = serviceProvidersFeature.RequestServices.GetRequiredService<BountyContext>();
+        bountyContext.Database.OpenConnection();
+        bountyContext.Database.EnsureCreated();
+
         IFeatureCollection features = new FeatureCollection();
         features.Set<IServiceProvidersFeature>(serviceProvidersFeature);
 
         HttpContext = new DefaultHttpContext(features);
+        HttpContext.Connection.RemoteIpAddress = IPAddress.Parse("192.168.13.12");
     }
 }

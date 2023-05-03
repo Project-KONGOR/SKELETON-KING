@@ -38,7 +38,7 @@ public class PreAuthHandlerTest
             new Account()
             {
                 Name = login,
-                User = new(salt, passwordSalt, hashedPassword)
+                User = new(salt, passwordSalt, hashedPassword),
             });
         await bountyContext.SaveChangesAsync();
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();
