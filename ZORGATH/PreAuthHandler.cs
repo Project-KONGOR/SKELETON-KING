@@ -28,7 +28,50 @@ public class PreAuthHandler : IClientRequesterHandler
                 formData["A"],
                 account.User.Salt,
                 account.User.PasswordSalt,
-                account.User.HashedPassword))
+                account.User.HashedPassword,
+                new AccountDetails(
+                    account.AccountId,
+                    account.Name,
+                    account.AccountType,
+                    account.SelectedUpgradeCodes,
+                    account.AutoConnectChatChannels,
+                    account.IgnoredList,
+
+                    // TODO: query stats too.
+                    new AccountStats(
+                        /* level: */ 0,
+                        /* levelExp: */ 0,
+                        /* psr: */ 1500,
+                        /* normalRankedGamesMMR: */ 1500,
+                        /* casualModeMMR: */ 1500,
+                        /* publicGamesPlayed: */ 0,
+                        /* normalRankedGamesPlayed: */ 0,
+                        /* casualModeGamesPlayed: */ 0,
+                        /* midWarsGamesPlayed: */ 0,
+                        /* allOtherGamesPlayed: */ 0,
+                        /* publicGameDisconnects: */ 0,
+                        /* normalRankedGameDisconnects: */ 0,
+                        /* casualModeDisconnects: */ 0,
+                        /* midWarsTimesDisconnected: */ 0,
+                        /* allOtherGameDisconnects: */ 0),
+
+                    // Clan information.
+                    account.Clan!.ClanId,
+                    account.Clan!.Name,
+                    account.Clan!.Tag,
+                    account.ClanTier,
+
+                    // TODO: CloudStorage.
+                    /* useCloud: */ false,
+                    /* cloudAutoUpload: */ false,
+
+                    // User-specific information.
+                    account.User.Id,
+                    account.User.Email!,
+                    account.User.GoldCoins,
+                    account.User.SilverCoins,
+                    account.User.UnlockedUpgradeCodes
+                )))
             .FirstOrDefaultAsync();
         if (srpAuthSessionData is null)
         {
