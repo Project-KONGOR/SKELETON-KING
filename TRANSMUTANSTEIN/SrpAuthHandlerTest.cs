@@ -45,6 +45,7 @@ public class SrpAuthHandlerTest
     [TestMethod]
     public async Task TestSrpAuthSuccess()
     {
+        string expectedCookie = "C81C1CDA25B2F0E600681167BCC3D446";
         string loginName = "SouL";
         string clientPublicEphemeral = "2cf2668bf9d0e2358d43d41ea7ba3152e62f953519999ed8bf7ac94066c3974d2784e82d0e2841329d1188ebe8fa24ddab46a95e4882f801933ce2e4d3329d48fad794998429aa73786f2c6e0a8080672a7840ebfdb0135dc1276a04948a51a26785ddb64dc14e796c759c8a17368290ffdc6fe228c0fdf6b3a6e125cc4fbc532ee61442f6b2f8c44b7f288b60861d132aead63d8163c3bcf8f2651e47a600894a37997f2f9b9d273f1a82c6d4db545b78c882df45b79e4f05bb3bcaa4f0a58e6ed629a30f4b409627cef5a3943e8b342e2b9632099683b2f228c0b8c7086eaccd424b3c22df1fa599320ff21ee2510b4952a0a856bd0a6cf7cfd524fa5110e4";
         string salt = "078f6068db52fd1cea4db48789b3ce8bfb47fdb33d4767d0c86e35104a5d8ad511aa18624529bc3176697a4f366098aa016464cfcdf3b8acd620ecf5bd553e98ff4364b8f39ef6ffd2893bf80e681cd00d9622c1270ce2ddb681ab097c713429d5875566e2ef1934abb99d870ddf83f74be33b4b3ba22f7dd93b50057c45d5fe47a49539c61178d4c06748d5519433bd62e9f083bd59bbb4ed4f3a8b3fffb0895e07e07230445ec64fabc9a4e27c975012b9f78922beff6759150312d8b0fab25afbb363a2ed9810d6d1180636b0f886fc74dbba51f89389df06405308d7d9f0c2c2775985ae71c03337b0ecb938b327d8883e506632260962f8223d2f2865e2";
@@ -62,6 +63,7 @@ public class SrpAuthHandlerTest
             selectedUpgradeCodes: Array.Empty<string>(),
             autoConnectChatChannels: Array.Empty<string>(),
             ignoredAccountIds: Array.Empty<string>(),
+            cookie: expectedCookie,
             accountStats: new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
             clanId: null,
             clanName: null,
@@ -100,7 +102,7 @@ public class SrpAuthHandlerTest
 
         // New cookie should be assigned to the Account.
         using BountyContext bountyContext2 = controllerContext.HttpContext.RequestServices.GetRequiredService<IDbContextFactory<BountyContext>>().CreateDbContext();
-        string? cookie = await bountyContext2.Accounts.Where(a => a.Name == loginName).Select(a => a.Cookie).FirstOrDefaultAsync();
-        Assert.IsNotNull(cookie);
+        string? actualCookie = await bountyContext2.Accounts.Where(a => a.Name == loginName).Select(a => a.Cookie).FirstOrDefaultAsync();
+        Assert.AreEqual(expectedCookie, actualCookie);
     }
 }

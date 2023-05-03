@@ -11,6 +11,7 @@ public class AccountDetails
     public readonly ICollection<string> AutoConnectChatChannels;
     public readonly ICollection<string> IgnoredAccountIds;
     public readonly AccountStats AccountStats;
+    public readonly string Cookie;
     public readonly int? ClanId;
     public readonly string? ClanName;
     public readonly string? ClanTag;
@@ -40,6 +41,7 @@ public class AccountDetails
         ICollection<string> selectedUpgradeCodes,
         ICollection<string> autoConnectChatChannels,
         ICollection<string> ignoredAccountIds,
+        string cookie,
         AccountStats accountStats,
 
         // Clan information.
@@ -65,6 +67,7 @@ public class AccountDetails
         SelectedUpgradeCodes = selectedUpgradeCodes;
         AutoConnectChatChannels = autoConnectChatChannels;
         IgnoredAccountIds = ignoredAccountIds;
+        Cookie = cookie;
         AccountStats = accountStats;
 
         ClanId = clanId;
@@ -82,29 +85,50 @@ public class AccountDetails
         CloudAutoUpload = cloudAutoUpload;
     }
 
-    public async Task Load(BountyContext bountyContext)
+    public async Task Load(IDbContextFactory<BountyContext> bountyContextFactory)
     {
-        Identities = await bountyContext.Accounts.Where(account => account.User.Id == UserId).Select(account => new List<string>() { account.Name, account.AccountId.ToString() }).ToListAsync();
-        BuddyList = await bountyContext.Friends.Where(friend => friend.ExpirationDateTime == null && friend.AccountId == AccountId)
+        var identities = bountyContextFactory.CreateDbContext().Accounts.Where(account => account.User.Id == UserId).Select(account => new List<string>() { account.Name, account.AccountId.ToString() }).ToListAsync();
+        var buddyList = bountyContextFactory.CreateDbContext().Friends.Where(friend => friend.ExpirationDateTime == null && friend.AccountId == AccountId)
             .Select(friend => new BuddyListEntry(friend.FriendAccount.Name, friend.FriendAccount.AccountId, friend.FriendAccount.Clan!.Tag, friend.Group))
             .ToDictionaryAsync(
                 buddyListEntry => buddyListEntry.BuddyId,
                 buddyListEntry => buddyListEntry
             );
-        Notifications = await bountyContext.Notifications.Where(n => n.AccountId == AccountId).Select(n => new NotificationEntry(n.Content, n.NotificationId)).ToListAsync();
+        var notifications = bountyContextFactory.CreateDbContext().Notifications.Where(n => n.AccountId == AccountId).Select(n => new NotificationEntry(n.Content, n.NotificationId)).ToListAsync();
 
         IEnumerable<int> ignoredAccountIds = IgnoredAccountIds.Select(int.Parse);
-        IgnoredList = await bountyContext.Accounts.Where(a => ignoredAccountIds.Contains(a.AccountId)).Select(a => new IgnoredListEntry(a.AccountId, a.Name)).ToListAsync();
+        var ignoredList = bountyContextFactory.CreateDbContext().Accounts.Where(a => ignoredAccountIds.Contains(a.AccountId)).Select(a => new IgnoredListEntry(a.AccountId, a.Name)).ToListAsync();
 
+        Task<Dictionary<int, ClanRosterEntry>>? clanRoster;
         if (ClanId == null)
         {
-            ClanRoster = null;
+            clanRoster = null;
         }
         else
         {
-            ClanRoster = await bountyContext.Accounts.Where(acc => acc.Clan!.ClanId == ClanId.Value)
+            clanRoster = bountyContextFactory.CreateDbContext().Accounts.Where(acc => acc.Clan!.ClanId == ClanId.Value)
                 .Select(acc => new ClanRosterEntry(acc.AccountId, acc.ClanTier, acc.Name))
                 .ToDictionaryAsync(entry => entry.AccountId, entry => entry);
         }
+
+        var cookie = bountyContextFactory.CreateDbContext().Accounts
+            .Where(account => account.AccountId == AccountId)
+            .ExecuteUpdateAsync(update => update.SetProperty(account => account.Cookie, Cookie));
+
+        // Wait until all 5 (or 6) requests are complete. This allows them to execute in parallel instead of sequentially.
+        if (clanRoster == null)
+        {
+            await Task.WhenAll(identities, buddyList, notifications, ignoredList, cookie);
+        }
+        else
+        {
+            await Task.WhenAll(identities, buddyList, notifications, ignoredList, clanRoster, cookie);
+            ClanRoster = clanRoster.Result;
+        }
+
+        Identities = identities.Result;
+        BuddyList = buddyList.Result;
+        Notifications = notifications.Result;
+        IgnoredList = ignoredList.Result;
     }
 }

@@ -13,7 +13,7 @@ public class Program
         builder.Services.AddControllers();
 
         string connectionString = builder.Configuration.GetConnectionString("BOUNTY")!;
-        builder.Services.AddDbContext<BountyContext>(options =>
+        builder.Services.AddDbContextFactory<BountyContext>(options =>
         {
             options.UseSqlServer(connectionString, connection => connection.MigrationsAssembly("SKELETON-KING"));
         });

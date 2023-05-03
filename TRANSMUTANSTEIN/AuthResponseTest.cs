@@ -6,6 +6,12 @@ public class AuthResponseTest
     [TestMethod]
     public void TestAuthResponseConstruction()
     {
+        string cookie = "C81C1CDA25B2F0E600681167BCC3D446";
+        string clientIpAddress = "127.0.0.1";
+        long hostTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        string chatServerUrl = "192.168.0.1";
+        string icbUrl = "www.google.com";
+
         AccountDetails accountDetails = new(
             accountId: 3,
             accountName: "SouL",
@@ -25,6 +31,7 @@ public class AuthResponseTest
             {
                 "1",
             },
+            cookie,
             accountStats: new AccountStats(
                 level: 1,
                 levelExp: 2.5f,
@@ -126,16 +133,10 @@ public class AuthResponseTest
             IgnoredList = new List<IgnoredListEntry>()
             {
                 new IgnoredListEntry(1, "DEVOURER")
-            }
+            },
         };
 
-        string cookie = "C81C1CDA25B2F0E600681167BCC3D446";
-        string clientIpAddress = "127.0.0.1";
-        long hostTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        string chatServerUrl = "192.168.0.1";
-        string icbUrl = "www.google.com";
-
-        AuthResponse authResponse = new(accountDetails, cookie, clientIpAddress, hostTime, chatServerUrl, icbUrl, new("initial_vector", "hash_code", "key_version"));
+        AuthResponse authResponse = new(accountDetails, clientIpAddress, hostTime, chatServerUrl, icbUrl, new("initial_vector", "hash_code", "key_version"));
         Assert.AreEqual(accountDetails.AccountId, authResponse.AccountId);
         Assert.AreEqual(accountDetails.AccountType, authResponse.AccountType);
         Assert.AreEqual(false, authResponse.AccountCloudStorageInfo.UseCloud);

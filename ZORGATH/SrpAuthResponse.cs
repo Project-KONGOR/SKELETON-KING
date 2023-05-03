@@ -6,7 +6,7 @@
 [Serializable]
 public class SrpAuthResponse : AuthResponse
 {
-    public SrpAuthResponse(AccountDetails accountDetails, string cookie, string clientIpAddress, long hostTime, string chatServerUrl, string icbUrl, string proof, SecInfo secInfo) : base(accountDetails, cookie, clientIpAddress, hostTime, chatServerUrl, icbUrl, secInfo)
+    public SrpAuthResponse(AccountDetails accountDetails, string clientIpAddress, long hostTime, string chatServerUrl, string icbUrl, string proof, SecInfo secInfo) : base(accountDetails, clientIpAddress, hostTime, chatServerUrl, icbUrl, secInfo)
     {
         Proof = proof;
     }

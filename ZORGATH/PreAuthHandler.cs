@@ -21,6 +21,7 @@ public class PreAuthHandler : IClientRequesterHandler
         using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
         string login = formData["login"];
 
+        string updatedCookie = Guid.NewGuid().ToString("N");
         SrpAuthSessionData? srpAuthSessionData = await bountyContext.Accounts
             .Where(account => account.Name == login)
             .Select(account => new SrpAuthSessionData(
@@ -36,6 +37,7 @@ public class PreAuthHandler : IClientRequesterHandler
                     account.SelectedUpgradeCodes,
                     account.AutoConnectChatChannels,
                     account.IgnoredList,
+                    updatedCookie,
 
                     // TODO: query stats too.
                     new AccountStats(

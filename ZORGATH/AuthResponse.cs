@@ -8,7 +8,7 @@ public class AuthResponse
 {
     private static readonly string _authHashMagic = "8roespiemlasToUmiuglEhOaMiaSWlesplUcOAniupr2esPOeBRiudOEphiutOuJ";
 
-    public AuthResponse(AccountDetails accountDetails, string cookie, string clientIpAddress, long hostTime, string chatServerUrl, string icbUrl, SecInfo secInfo)
+    public AuthResponse(AccountDetails accountDetails, string clientIpAddress, long hostTime, string chatServerUrl, string icbUrl, SecInfo secInfo)
     {
         AccountId = accountDetails.AccountId;
         AccountType = accountDetails.AccountType;
@@ -22,8 +22,8 @@ public class AuthResponse
         Nickname = accountDetails.AccountName;
         Email = accountDetails.Email;
         ClientIpAddress = clientIpAddress;
-        Cookie = cookie;
-        AuthHash = ComputeAuthHash(accountDetails.AccountId, cookie, clientIpAddress);
+        Cookie = accountDetails.Cookie;
+        AuthHash = ComputeAuthHash(accountDetails.AccountId, accountDetails.Cookie, clientIpAddress);
         HostTime = hostTime;
         VestedThreshold = 5;
         ChatUrl = chatServerUrl;

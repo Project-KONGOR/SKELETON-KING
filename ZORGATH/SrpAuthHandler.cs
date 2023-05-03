@@ -29,14 +29,9 @@ public class SrpAuthHandler : IClientRequesterHandler
         AccountDetails accountDetails = srpAuthSessionData.AccountDetails;
 
         // Load data for the account.
-        using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
-        await accountDetails.Load(bountyContext);
-
-        // Generate a new cookie for the Account.
-        string cookie = Guid.NewGuid().ToString("N");
-        await bountyContext.Accounts
-            .Where(account => account.AccountId == accountDetails.AccountId)
-            .ExecuteUpdateAsync(update => update.SetProperty(account => account.Cookie, cookie));
+        IServiceProvider serviceProvider = controllerContext.HttpContext.RequestServices;
+        IDbContextFactory<BountyContext> bountyContextFactory = serviceProvider.GetRequiredService<IDbContextFactory<BountyContext>>();
+        await accountDetails.Load(bountyContextFactory);
 
         string clientIpAddress = controllerContext.HttpContext.Connection.RemoteIpAddress.ToString();
         long hostTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -44,7 +39,7 @@ public class SrpAuthHandler : IClientRequesterHandler
         // TODO: update these once we support custom account icons and the chatserver.
         string chatServerUrl = "localhost";
         string icbUrl = "kongor.online";
-        SrpAuthResponse response = new(accountDetails, cookie, clientIpAddress, hostTime, chatServerUrl, icbUrl, proof, _secInfo);
+        SrpAuthResponse response = new(accountDetails, clientIpAddress, hostTime, chatServerUrl, icbUrl, proof, _secInfo);
         return new OkObjectResult(PHP.Serialize(response));
     }
 
