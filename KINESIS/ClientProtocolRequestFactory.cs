@@ -17,6 +17,7 @@ public class ClientProtocolRequestFactory : IProtocolRequestFactory<ConnectedCli
             ChatServerRequest.Connect => Client.ConnectRequest.Decode(buffer, offset, out updatedOffset),
             ChatServerRequest.JoinChatChannel => Client.JoinChannelRequest.Decode(buffer, offset, out updatedOffset),
             ChatServerRequest.LeaveChatChannel => Client.LeaveChatChannelRequest.Decode(buffer, offset, out updatedOffset),
+            ChatServerRequest.SendChatChannelMessage => Client.SendChatChannelMessageRequest.Decode(buffer, offset, out updatedOffset),
 
             // Unknown message.
             _ => null,

@@ -4,7 +4,7 @@ public class ChatChannelUser
 {
     public readonly string DisplayedName;
     public readonly int AccountId;
-    public ChatClientStatus ChatClientStatus;
+    public readonly ChatClientStatus ChatClientStatus;
     public readonly ChatAdminLevel ChatAdminLevel;
     public readonly string ChatSymbol;
     public readonly string ChatNameColour;
@@ -156,6 +156,35 @@ public class ChatChannel
         if (notifyClient)
         {
             client.NotifyRemovedFromChatChannel(this, response);
+        }
+    }
+
+    public void SendMessage(int accountId, string message)
+    {
+        ChatChannelUser[] users;
+        lock (this)
+        {
+            users = _users.ToArray();
+        }
+
+        ReceivedChatChannelMessageResponse receivedChatChannelMessageResponse = new(
+            accountId: accountId,
+            channelId: _id,
+            message: message
+        );
+
+        foreach (ChatChannelUser user in users)
+        {
+            if (user.AccountId == accountId)
+            {
+                // Don't send to yourself.
+                continue;
+            }
+
+            if (ChatServer.ConnectedClientsByAccountId.TryGetValue(user.AccountId, out var userClient))
+            {
+                userClient.SendResponse(receivedChatChannelMessageResponse);
+            }
         }
     }
 }

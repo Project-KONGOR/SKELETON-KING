@@ -8,4 +8,5 @@ public class ChatServerResponse
     public const short FullChannelUpdate = 0x0004;
     public const short JoinedChatChannel = 0x0005;
     public const short LeftChatChannel = 0x0006;
+    public const short ReceivedChatChannelMessage = 0x0003;
 }

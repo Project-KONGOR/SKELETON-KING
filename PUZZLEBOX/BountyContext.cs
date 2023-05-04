@@ -4,13 +4,13 @@ public class BountyContext : IdentityDbContext<ElementUser>
 {
     public BountyContext(DbContextOptions<BountyContext> options) : base(options) { }
 
-    public DbSet<Account> Accounts { get; set; }
-    public DbSet<Friend> Friends { get; set; }
-    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Account> Accounts { get; set; } = null!;
+    public DbSet<Friend> Friends { get; set; } = null!;
+    public DbSet<Notification> Notifications { get; set; } = null!;
 
-    public DbSet<Clan> Clans { get; set; }
+    public DbSet<Clan> Clans { get; set; } = null!;
 
-    public DbSet<CloudStorage> CloudStorages { get; set; }
+    public DbSet<CloudStorage> CloudStorages { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

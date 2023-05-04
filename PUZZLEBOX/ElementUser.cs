@@ -1,4 +1,6 @@
-﻿namespace PUZZLEBOX;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PUZZLEBOX;
 
 /// <summary>
 ///     An Entity Framework object representing an owner of one or more Accounts. Includes information shared by all
@@ -54,16 +56,19 @@ public class ElementUser : IdentityUser
     /// <summary>
     ///     Number of gold coins that the user has.
     /// </summary>
+    [Column("Points")]
     public int GoldCoins { get; set; }
 
     /// <summary>
     ///     Number of silver coins that the user has.
     /// </summary>
+    [Column("MMPoints")]
     public int SilverCoins { get; set; }
 
     /// <summary>
     ///     Number of Plinko tickets that the user has.
     /// </summary>
+    [Column("Tickets")]
     public int PlinkoTickets { get; set; }
 
     /// <summary>

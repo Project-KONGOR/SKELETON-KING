@@ -97,7 +97,7 @@ public class ConnectRequest : ProtocolRequest<ConnectedClient>
             return;
         }
 
-        string upToDateClientVersion = "4.10.8"; // TODO: check current version properly.
+        string upToDateClientVersion = "4.10.9"; // TODO: check current version properly.
         string clientVersion = $"{_clientVersionMajor}.{_clientVersionMinor}.{_clientVersionMicro}";
         if (clientVersion != upToDateClientVersion)
         {
