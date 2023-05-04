@@ -15,7 +15,9 @@ public class ClientProtocolRequestFactory : IProtocolRequestFactory<ConnectedCli
         return messageId switch
         {
             ChatServerRequest.Connect => Client.ConnectRequest.Decode(buffer, offset, out updatedOffset),
-            
+            ChatServerRequest.JoinChatChannel => Client.JoinChannelRequest.Decode(buffer, offset, out updatedOffset),
+            ChatServerRequest.LeftChatChannel => Client.LeftChatChannelRequest.Decode(buffer, offset, out updatedOffset),
+
             // Unknown message.
             _ => null,
         };

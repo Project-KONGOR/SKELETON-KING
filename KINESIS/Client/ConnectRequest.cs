@@ -1,6 +1,6 @@
 ﻿namespace KINESIS.Client;
 
-public record ConnectRequestData(string UserId);
+public record ConnectRequestData(string AccountName, string UserId);
 
 public class ConnectRequest : ProtocolRequest<ConnectedClient>
 {
@@ -87,7 +87,7 @@ public class ConnectRequest : ProtocolRequest<ConnectedClient>
 
         ConnectRequestData? data = bountyContext.Accounts
             .Where(account => account.AccountId == accountId && account.Cookie == sessionCookie)
-            .Select(account => new ConnectRequestData(account.User.Id))
+            .Select(account => new ConnectRequestData(account.Name, account.User.Id))
             .FirstOrDefault();
         if (data == null)
         {
@@ -120,6 +120,29 @@ public class ConnectRequest : ProtocolRequest<ConnectedClient>
             }
         }
 
-        connectedClient.Initialize(_accountId);
+        // TODO: include clan name if applicable.
+        string displayedName = data.AccountName;
+
+        // TODO: pass correct flags.
+        ChatClientFlags chatClientFlags = ChatClientFlags.IsPremium;
+        ChatClientStatus chatClientStatus = ChatClientStatus.Connected;
+
+        // TODO: lookup correct chat symbol/name color/account icon.
+        string selectedChatSymbolCode = "";
+        string selectedChatNameColourCode = "cc.white";
+        string selectedAccountIconCode = "ai.Default Icon";
+
+        int ascensionLevel = 0;
+        string upperCaseClanName = "";
+        ClientInformation clientInformation = new(
+            displayedName,
+            chatClientFlags,
+            chatClientStatus,
+            selectedChatSymbolCode,
+            selectedChatNameColourCode,
+            selectedAccountIconCode,
+            ascensionLevel,
+            upperCaseClanName);
+        connectedClient.Initialize(_accountId, clientInformation);
     }
 }

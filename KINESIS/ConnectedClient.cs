@@ -1,9 +1,46 @@
 ﻿namespace KINESIS;
 
+public class ClientInformation
+{
+    public readonly string DisplayedName;
+    public readonly ChatClientFlags ChatClientFlags;
+    public readonly ChatClientStatus ChatClientStatus;
+    public readonly string SelectedChatSymbolCode;
+    public readonly string SelectedChatNameColourCode;
+    public readonly string SelectedAccountIconCode;
+    public readonly int AscensionLevel;
+    public readonly string UpperCaseClanName;
+
+    public ClientInformation(
+        string displayedName,
+        ChatClientFlags chatClientFlags,
+        ChatClientStatus chatClientStatus,
+        string selectedChatSymbolCode,
+        string selectedChatNameColourCode,
+        string selectedAccountIconCode,
+        int ascensionLevel,
+        string upperCaseClanName)
+    {
+        DisplayedName = displayedName;
+        ChatClientFlags = chatClientFlags;
+        ChatClientStatus = chatClientStatus;
+        SelectedChatSymbolCode = selectedChatSymbolCode;
+        SelectedChatNameColourCode = selectedChatNameColourCode;
+        SelectedAccountIconCode = selectedAccountIconCode;
+        AscensionLevel = ascensionLevel;
+        UpperCaseClanName = upperCaseClanName;
+    } 
+}
+
 public class ConnectedClient : IConnectedSubject
 {
     private readonly ChatServerConnection<ConnectedClient> _chatServerConnection;
     private int _accountId;
+    private ClientInformation _clientInformation = null!;
+    private readonly List<ChatChannel> _chatChannels = new();
+
+    public int AccountId => _accountId;
+    public ClientInformation ClientInformation => _clientInformation;
 
     public ConnectedClient(Socket socket, IProtocolRequestFactory<ConnectedClient> requestFactory, IDbContextFactory<BountyContext> dbContextFactory)
     {
@@ -13,6 +50,19 @@ public class ConnectedClient : IConnectedSubject
     public void Disconnect(string disconnectReason)
     {
         ChatServer.ConnectedClientsByAccountId.Remove(_accountId, out _);
+
+        ChatChannel[] chatChannels;
+        lock (this)
+        {
+            chatChannels = _chatChannels.ToArray();
+            _chatChannels.Clear();
+        }
+
+        foreach (ChatChannel chatChannel in chatChannels)
+        {
+            chatChannel.Remove(this, notifyClient: false);
+        }
+
         _chatServerConnection.Stop();
     }
 
@@ -26,9 +76,10 @@ public class ConnectedClient : IConnectedSubject
         _chatServerConnection.EnqueueResponse(response);
     }
 
-    public void Initialize(int accountId)
+    public void Initialize(int accountId, ClientInformation clientInformation)
     {
         _accountId = accountId;
+        _clientInformation = clientInformation;
 
         // Register new connection, drop old connection if still registered.
         ChatServer.ConnectedClientsByAccountId.AddOrUpdate(accountId, this, (accountId, oldClient) =>
@@ -36,5 +87,26 @@ public class ConnectedClient : IConnectedSubject
             oldClient.Disconnect("Replaced with a new connection.");
             return this;
         });
+    }
+
+    public void NotifyAddedToChatChannel(ChatChannel chatChannel, ProtocolResponse response)
+    {
+        lock (this)
+        {
+            _chatChannels.Add(chatChannel);
+        }
+        _chatServerConnection.EnqueueResponse(response);
+    }
+
+    public void NotifyRemovedFromChatChannel(ChatChannel chatChannel, ProtocolResponse? response)
+    {
+        lock (this)
+        {
+            _chatChannels.Remove(chatChannel);
+        }
+        if (response != null)
+        {
+            _chatServerConnection.EnqueueResponse(response);
+        }
     }
 }

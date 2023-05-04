@@ -1,4 +1,4 @@
-﻿namespace PUZZLEBOX;
+namespace PUZZLEBOX;
 
 public class BountyContext : IdentityDbContext<ElementUser>
 {

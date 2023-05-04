@@ -7,6 +7,8 @@ public class ChatServer
     private readonly TcpListener _clientListener;
 
     public static readonly ConcurrentDictionary<int, ConnectedClient> ConnectedClientsByAccountId = new();
+    public static readonly ConcurrentDictionary<int, ChatChannel> ChatChannelsByChannelId = new();
+    public static readonly ConcurrentDictionary<string, ChatChannel> ChatChannelsByUpperCaseName = new();
 
     public ChatServer(IDbContextFactory<BountyContext> dbContextFactory)
     {
