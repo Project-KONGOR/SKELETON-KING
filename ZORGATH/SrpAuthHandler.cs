@@ -4,11 +4,15 @@ public class SrpAuthHandler : IClientRequesterHandler
 {
     private readonly ConcurrentDictionary<string, SrpAuthSessionData> _srpAuthSessions;
     private readonly SecInfo _secInfo;
+    private readonly string _chatServerUrl;
+    private readonly string _icbUrl;
 
-    public SrpAuthHandler(ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions, SecInfo secInfo)
+    public SrpAuthHandler(ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions, SecInfo secInfo, string chatServerUrl, string icbUrl)
     {
         _srpAuthSessions = srpAuthSessions;
         _secInfo = secInfo;
+        _chatServerUrl = chatServerUrl;
+        _icbUrl = icbUrl;
     }
 
     public async Task<IActionResult> HandleRequest(ControllerContext controllerContext, Dictionary<string, string> formData)
@@ -41,10 +45,7 @@ public class SrpAuthHandler : IClientRequesterHandler
         string clientIpAddress = controllerContext.HttpContext.Connection.RemoteIpAddress.ToString();
         long hostTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-        // TODO: update these once we support custom account icons and the chatserver.
-        string chatServerUrl = "localhost";
-        string icbUrl = "kongor.online";
-        SrpAuthResponse response = new(accountDetails, cookie, clientIpAddress, hostTime, chatServerUrl, icbUrl, proof, _secInfo);
+        SrpAuthResponse response = new(accountDetails, cookie, clientIpAddress, hostTime, _chatServerUrl, _icbUrl, proof, _secInfo);
         return new OkObjectResult(PHP.Serialize(response));
     }
 

@@ -28,7 +28,7 @@ public class Program
                 {"autocompleteNicks", new AutoCompleteNicksHandler() },
                 {"pre_auth", new PreAuthHandler(srpAuthSessions) },
                 {"show_simple_stats", new ShowSimpleStatsHandler() },
-                {"srpAuth", new SrpAuthHandler(srpAuthSessions, new()) },
+                {"srpAuth", new SrpAuthHandler(srpAuthSessions, new(), chatServerUrl: "localhost", icbUrl: "kongor.online") },
             }
         );
         builder.Services.AddSingleton<ChatServer>();

@@ -7,7 +7,7 @@ public class SrpAuthHandlerTest
     public async Task TestSrpAuthMissingSession()
     {
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();
-        SrpAuthHandler srpAuthHandler = new(srpAuthSessions, new());
+        SrpAuthHandler srpAuthHandler = new(srpAuthSessions, new(), chatServerUrl: "localhost", icbUrl: "kongor.online");
         Dictionary<string, string> formData = new()
         {
             ["login"] = "dummyuser"
@@ -30,7 +30,7 @@ public class SrpAuthHandlerTest
         {
             [loginName] = new(loginName: loginName, clientPublicEphemeral: clientPublicEphemeral, salt: salt, passwordSalt: passwordSalt, hashedPassword: hashedPassword, accountDetails: null!)
         };
-        SrpAuthHandler srpAuthHandler = new(srpAuthSessions, new());
+        SrpAuthHandler srpAuthHandler = new(srpAuthSessions, new(), chatServerUrl: "localhost", icbUrl: "kongor.online");
         Dictionary<string, string> formData = new()
         {
             ["login"] = loginName,
@@ -79,7 +79,7 @@ public class SrpAuthHandlerTest
         {
             [loginName] = new(clientPublicEphemeral: clientPublicEphemeral, salt: salt, passwordSalt: passwordSalt, verifier: verifier, serverEphemeral: serverEphemeral, accountDetails: accountDetails)
         };
-        SrpAuthHandler srpAuthHandler = new(srpAuthSessions, new());
+        SrpAuthHandler srpAuthHandler = new(srpAuthSessions, new(), chatServerUrl: "localhost", icbUrl: "kongor.online");
         Dictionary<string, string> formData = new()
         {
             ["login"] = loginName,
