@@ -1,5 +1,7 @@
 // Keep this file alphabetized.
 
+global using PUZZLEBOX;
+
 #region Microsoft Using Directives
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Http.Features;

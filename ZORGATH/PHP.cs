@@ -1,8 +1,5 @@
 ﻿namespace ZORGATH;
 
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// Custom PHP serialization library that focuses on performance while fixing some of the issues that PhpSerializerNET has:
 ///     - inability to serialize floats.

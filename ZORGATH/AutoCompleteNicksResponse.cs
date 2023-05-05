@@ -1,3 +1,5 @@
+namespace ZORGATH;
+
 public class AutoCompleteNicksResponse
 {
     public AutoCompleteNicksResponse(List<string> matchedAccountNames) => MatchedAccountNames = matchedAccountNames;

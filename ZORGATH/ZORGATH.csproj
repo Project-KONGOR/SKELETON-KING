@@ -22,4 +22,8 @@
     <PackageReference Include="srp" Version="1.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PUZZLEBOX\PUZZLEBOX.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace ZORGATH;
+﻿namespace PUZZLEBOX;
 
 public enum AccountType
 {

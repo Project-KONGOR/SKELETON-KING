@@ -1,3 +1,5 @@
+namespace ZORGATH;
+
 public class AccountLookupErrorResponse
 {
     /// <summary>

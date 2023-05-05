@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ZORGATH;
+using PUZZLEBOX;
 
 #nullable disable
 
 namespace SKELETON_KING.Migrations
 {
     [DbContext(typeof(BountyContext))]
-    [Migration("20230503201133_AccountsAndUsers")]
+    [Migration("20230505050804_AccountsAndUsers")]
     partial class AccountsAndUsers
     {
         /// <inheritdoc />
@@ -158,7 +158,7 @@ namespace SKELETON_KING.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ZORGATH.Account", b =>
+            modelBuilder.Entity("PUZZLEBOX.Account", b =>
                 {
                     b.Property<int>("AccountId")
                         .ValueGeneratedOnAdd()
@@ -222,7 +222,7 @@ namespace SKELETON_KING.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("ZORGATH.Clan", b =>
+            modelBuilder.Entity("PUZZLEBOX.Clan", b =>
                 {
                     b.Property<int>("ClanId")
                         .ValueGeneratedOnAdd()
@@ -254,7 +254,7 @@ namespace SKELETON_KING.Migrations
                     b.ToTable("Clans");
                 });
 
-            modelBuilder.Entity("ZORGATH.ElementUser", b =>
+            modelBuilder.Entity("PUZZLEBOX.ElementUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(36)
@@ -275,6 +275,9 @@ namespace SKELETON_KING.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("GoldCoins")
+                        .HasColumnType("int");
+
                     b.Property<string>("HashedPassword")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -285,9 +288,6 @@ namespace SKELETON_KING.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("MMPoints")
-                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -311,7 +311,7 @@ namespace SKELETON_KING.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Points")
+                    b.Property<int>("PlinkoTickets")
                         .HasColumnType("int");
 
                     b.Property<string>("Salt")
@@ -323,7 +323,7 @@ namespace SKELETON_KING.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
-                    b.Property<int>("Tickets")
+                    b.Property<int>("SilverCoins")
                         .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -358,7 +358,7 @@ namespace SKELETON_KING.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("ZORGATH.Friend", b =>
+            modelBuilder.Entity("PUZZLEBOX.Friend", b =>
                 {
                     b.Property<int>("FriendId")
                         .ValueGeneratedOnAdd()
@@ -387,7 +387,7 @@ namespace SKELETON_KING.Migrations
                     b.ToTable("Friends");
                 });
 
-            modelBuilder.Entity("ZORGATH.Notification", b =>
+            modelBuilder.Entity("PUZZLEBOX.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
                         .ValueGeneratedOnAdd()
@@ -423,7 +423,7 @@ namespace SKELETON_KING.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("ZORGATH.ElementUser", null)
+                    b.HasOne("PUZZLEBOX.ElementUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -432,7 +432,7 @@ namespace SKELETON_KING.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("ZORGATH.ElementUser", null)
+                    b.HasOne("PUZZLEBOX.ElementUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -447,7 +447,7 @@ namespace SKELETON_KING.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ZORGATH.ElementUser", null)
+                    b.HasOne("PUZZLEBOX.ElementUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -456,20 +456,20 @@ namespace SKELETON_KING.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("ZORGATH.ElementUser", null)
+                    b.HasOne("PUZZLEBOX.ElementUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ZORGATH.Account", b =>
+            modelBuilder.Entity("PUZZLEBOX.Account", b =>
                 {
-                    b.HasOne("ZORGATH.Clan", "Clan")
+                    b.HasOne("PUZZLEBOX.Clan", "Clan")
                         .WithMany()
                         .HasForeignKey("ClanId");
 
-                    b.HasOne("ZORGATH.ElementUser", "User")
+                    b.HasOne("PUZZLEBOX.ElementUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -480,9 +480,9 @@ namespace SKELETON_KING.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ZORGATH.Friend", b =>
+            modelBuilder.Entity("PUZZLEBOX.Friend", b =>
                 {
-                    b.HasOne("ZORGATH.Account", "FriendAccount")
+                    b.HasOne("PUZZLEBOX.Account", "FriendAccount")
                         .WithMany()
                         .HasForeignKey("FriendAccountId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,8 +1,8 @@
 ﻿// Keep this file alphabetized.
 
+global using PUZZLEBOX;
+
 #region Microsoft Using Directives
-global using Microsoft.AspNetCore.Identity;
-global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +19,6 @@ global using SecureRemotePassword;
 #region System Using Directives
 global using System.Collections;
 global using System.Collections.Concurrent;
-global using System.ComponentModel.DataAnnotations;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
 global using System.Security.Cryptography;
