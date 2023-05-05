@@ -59,6 +59,73 @@ public class ChatServerConnection<T> where T : IConnectedSubject
         }
     }
 
+    public bool EnqueueResponse(ProtocolResponse response)
+    {
+        if (_socketClosed)
+        {
+            // Cannot not send anything to a closed socket.
+            return false;
+        }
+
+        CommandBuffer commandBuffer = response.CommandBuffer;
+        byte[] data = commandBuffer.Buffer;
+        int dataSize = commandBuffer.Size;
+
+        ByteBuffer sendBuffer = _sendBuffer;
+        // Multiple threads can call EnqueueResponse() so need to synchronize on the SendBuffer.
+        lock (sendBuffer)
+        {
+            // See if we have enough space to write the whole message.
+            sendBuffer.EnsureCapacity(dataSize + 2);
+
+            byte[] buffer = sendBuffer.Buffer;
+            int readOffset = sendBuffer.ReadOffset;
+            int writeOffset = sendBuffer.WriteOffset;
+
+            bool bufferWasEmpty = (readOffset == writeOffset);
+
+            // Write data length in network format.
+            buffer[writeOffset + 0] = (byte)(dataSize & 0x00FF);
+            buffer[writeOffset + 1] = (byte)((dataSize & 0xFF00) >> 8);
+
+            // Copy the data.
+            Array.Copy(data, 0, buffer, writeOffset + 2, dataSize);
+            writeOffset = writeOffset + 2 + dataSize;
+            sendBuffer.WriteOffset = writeOffset;
+
+            if (bufferWasEmpty)
+            {
+                IAsyncResult result;
+                // We are not sending any data currently. Begin sending now.
+                lock (_socket)
+                {
+                    // Only actually send data if the socket is not closed, and not being closed.
+                    if (_socketClosed)
+                    {
+                        return false;
+                    }
+
+                    result = _socket.BeginSend(buffer, 0, writeOffset, SocketFlags.None, OnDataSent, this);
+                }
+
+                if (result.CompletedSynchronously)
+                {
+                    return OnDataSentImpl(result);
+                }
+                else
+                {
+                    // Did not fail.
+                    return true;
+                }
+            }
+            else
+            {
+                // Enqueued successfully.
+                return true;
+            }
+        }
+    }
+
     private static void OnDataReceived(IAsyncResult ar)
     {
         if (ar.CompletedSynchronously)

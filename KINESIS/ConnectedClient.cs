@@ -18,4 +18,9 @@ public class ConnectedClient : IConnectedSubject
     {
         _chatServerConnection.Start();
     }
+
+    public void SendResponse(ProtocolResponse response)
+    {
+        _chatServerConnection.EnqueueResponse(response);
+    }
 }
