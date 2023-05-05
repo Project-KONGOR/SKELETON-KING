@@ -177,7 +177,7 @@ public class AuthResponse
     ///     The list of all clan members.
     /// </summary>
     [PhpProperty("clan_roster")]
-    public readonly Dictionary<int,ClanRosterEntry>? ClanRoster;
+    public readonly Dictionary<int, ClanRosterEntry>? ClanRoster;
 
     /// <summary>
     ///     The user's identities, listed in the order that they were registered.

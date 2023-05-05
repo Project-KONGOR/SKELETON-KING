@@ -102,7 +102,7 @@ public class PHP
                     {
                         continue;
                     }
-                    
+
                     string? name = null;
                     bool isInteger = false;
                     long key = 0;
@@ -267,8 +267,9 @@ public class PHP
     }
     private class EnumSerializer : ISerializer
     {
-        public void Serialize(StringBuilder sb, object data) {
-            IConvertible e = (IConvertible) data;
+        public void Serialize(StringBuilder sb, object data)
+        {
+            IConvertible e = (IConvertible)data;
             AppendInt(sb, e.ToInt32(null));
         }
     }

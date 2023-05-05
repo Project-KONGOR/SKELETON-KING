@@ -1,4 +1,4 @@
-﻿namespace TRANSMUTANSTEIN;
+﻿namespace ZORGATH;
 
 [TestClass]
 public class SrpAuthHandlerTest
@@ -20,7 +20,7 @@ public class SrpAuthHandlerTest
     public async Task TestSrpAuthIncorrectProof()
     {
         string loginName = "dummyuser";
-        
+
         // Precomputed Values: https://pastebin.com/c0TTziD6
         string clientPublicEphemeral = "4357180a10ca7393e09aadfbe43c807b3564a3b3916a3d48255e360b7ff7a7a1e5dd7616e2879d1c45d039a8f7bb84b29cd2195f79595608e654c89a2feceeb888ec117799b826d12ce8ec65937ba8b9a82998e3cdf049fda673a774e66977137540847ee359f09a4edcfcc9d2c7a8ea2b48e00b71db8e36e70e856c0dc0f2fc818710f54143a07fef459fa528a20d5fa55a4cce0ef8700a1926dd262f45aae0b270468dec3b4a212dc596ce9fcd1c149d392eebe98406ef5e250bcf509c819cad9af6e5dad4721ee845446c30d9f0b3c58e2f94cfe19c5d064d2e4cf2193efb71d1f752360655d3dd0aff327e73e12ef019e51b3cd14329b2f0aa7ebd96dd4b";
         string salt = "5dc38946324a5f866d4fcaf5f5c2777d52e168e8601f01bd7861d957455b6bee3f6e9617c0f5e958daff3ddc36f1f3ad075052ee13db0a9d77bbf6683786b9ffccdfbdf849370648f527442d66752ba07e1bfad5a5387c3be7f4df7d41425c78fbd2762502453fa491c9045bbe71fdce33d9d5afe1cc19d0d2515c389708cf3d2c9069b69e39de1580a567b651848ea7fdbcade3157b5c69caa53f886e36363e82fefce1a7f06ec333028d183c67da9aeef1cb6237774b85af230213e3159d34990cfdcabba62bfda64ccdcac45f278925044f834e38c5b271d48f652b6350bd5a82efac1e591ad2645c96c1652625d917a14753061670779afd69a5721a31ce";

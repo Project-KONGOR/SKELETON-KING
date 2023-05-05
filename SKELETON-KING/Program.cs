@@ -1,8 +1,9 @@
 namespace SKELETON_KING;
 
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
+using KINESIS;
 using PUZZLEBOX;
+using System.Collections.Concurrent;
 using ZORGATH;
 
 public class Program
@@ -13,7 +14,7 @@ public class Program
         builder.Services.AddControllers();
 
         string connectionString = builder.Configuration.GetConnectionString("BOUNTY")!;
-        builder.Services.AddDbContext<BountyContext>(options =>
+        builder.Services.AddDbContextFactory<BountyContext>(options =>
         {
             options.UseSqlServer(connectionString, connection => connection.MigrationsAssembly("SKELETON-KING"));
         });
@@ -30,9 +31,12 @@ public class Program
                 {"srpAuth", new SrpAuthHandler(srpAuthSessions, new()) },
             }
         );
+        builder.Services.AddSingleton<ChatServer>();
 
         var app = builder.Build();
         app.MapControllers();
+
+        app.Services.GetRequiredService<ChatServer>().Start();
         app.Run();
     }
 }

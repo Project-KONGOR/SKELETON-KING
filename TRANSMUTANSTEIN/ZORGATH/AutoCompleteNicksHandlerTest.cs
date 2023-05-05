@@ -1,4 +1,4 @@
-namespace TRANSMUTANSTEIN;
+namespace ZORGATH;
 
 [TestClass]
 public class AutoCompleteNicksHandlerTest
@@ -33,7 +33,7 @@ public class AutoCompleteNicksHandlerTest
         bountyContext.Accounts.AddRange(
             new Account(name: "korNy") { User = user },
             new Account(name: "korDen") { User = user },
-            new Account(name: "mrhappyasthma") {  User = user });
+            new Account(name: "mrhappyasthma") { User = user });
         await bountyContext.SaveChangesAsync();
 
         AutoCompleteNicksHandler handler = new();

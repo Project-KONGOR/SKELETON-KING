@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KINESIS\KINESIS.csproj" />
     <ProjectReference Include="..\ZORGATH\ZORGATH.csproj" />
   </ItemGroup>
 

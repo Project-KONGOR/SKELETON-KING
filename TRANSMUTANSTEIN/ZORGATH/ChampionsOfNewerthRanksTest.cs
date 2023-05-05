@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace TRANSMUTANSTEIN;
+﻿namespace ZORGATH;
 
 [TestClass]
 public class ChampionsOfNewerthRanksTest

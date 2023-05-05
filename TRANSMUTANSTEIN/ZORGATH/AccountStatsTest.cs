@@ -1,4 +1,4 @@
-﻿namespace TRANSMUTANSTEIN;
+﻿namespace ZORGATH;
 
 [TestClass]
 public class AccountStatsTest

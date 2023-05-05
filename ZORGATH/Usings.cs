@@ -1,7 +1,5 @@
 ﻿// Keep this file alphabetized.
 
-global using PUZZLEBOX;
-
 #region Microsoft Using Directives
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
@@ -10,6 +8,10 @@ global using Microsoft.Extensions.DependencyInjection;
 
 # region PhpSerializerNET Using Directives
 global using PhpSerializerNET;
+#endregion
+
+#region PUZZLEBOX Project Using Directives
+global using PUZZLEBOX;
 #endregion
 
 #region SecureRemotePassword Using Directives
