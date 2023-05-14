@@ -30,6 +30,8 @@ public class Account
 
     public Clan.Tier ClanTier { get; set; }
 
+    public CloudStorage? CloudStorage { get; set; }
+
     [Required]
     public DateTime TimestampCreated { get; set; }
 

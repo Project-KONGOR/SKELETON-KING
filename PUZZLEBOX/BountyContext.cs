@@ -10,6 +10,8 @@ public class BountyContext : IdentityDbContext<ElementUser>
 
     public DbSet<Clan> Clans { get; set; }
 
+    public DbSet<CloudStorage> CloudStorages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
