@@ -1,4 +1,4 @@
-﻿namespace ZORGATH.ChatServer;
+﻿namespace KINESIS.Client;
 
 public enum ChatAdminLevel
 {

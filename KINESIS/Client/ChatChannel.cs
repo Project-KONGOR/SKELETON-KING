@@ -1,6 +1,4 @@
-using ZORGATH.ChatServer.Client;
-
-namespace ZORGATH.ChatServer;
+namespace KINESIS.Client;
 
 public class ChatChannelUser
 {
@@ -92,10 +90,12 @@ public class ChatChannel
                 channelUsers: _users
             );
 
-            const int maxResponseSize = 16384;
-            _channelIsFull = fullChannelUpdateResponse.CommandBuffer.Size > maxResponseSize;
+            // Channel responses can be fairly big and can overflow the packet size limit. We don't want that since the client will reject it anyway.
+            // Mark the channel as full until another player leaves the channel.
+            _channelIsFull = fullChannelUpdateResponse.CommandBuffer.Size > ProtocolResponse.MAXIMUM_RESPONSE_SIZE;
             if (_channelIsFull)
             {
+                // Cannot add another user to this channel.
                 return false;
             }
 

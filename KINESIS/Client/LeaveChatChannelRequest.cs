@@ -1,17 +1,17 @@
-﻿namespace ZORGATH.ChatServer.Client;
+﻿namespace KINESIS.Client;
 
-public class LeftChatChannelRequest : ProtocolRequest<ConnectedClient>
+public class LeaveChatChannelRequest : ProtocolRequest<ConnectedClient>
 {
     private readonly string _channelName;
 
-    public LeftChatChannelRequest(string channelName)
+    public LeaveChatChannelRequest(string channelName)
     {
         _channelName = channelName;
     }
 
-    public static LeftChatChannelRequest Decode(byte[] data, int offset, out int updatedOffset)
+    public static LeaveChatChannelRequest Decode(byte[] data, int offset, out int updatedOffset)
     {
-        LeftChatChannelRequest message = new(
+        LeaveChatChannelRequest message = new(
             channelName: ReadString(data, offset, out offset)
         );
 

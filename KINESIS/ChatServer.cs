@@ -1,4 +1,6 @@
-﻿namespace KINESIS;
+﻿using KINESIS.Client;
+
+namespace KINESIS;
 
 public class ChatServer
 {

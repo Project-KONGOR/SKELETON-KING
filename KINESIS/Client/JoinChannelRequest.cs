@@ -1,4 +1,4 @@
-namespace ZORGATH.ChatServer.Client;
+namespace KINESIS.Client;
 
 public class JoinChannelRequest : ProtocolRequest<ConnectedClient>
 {

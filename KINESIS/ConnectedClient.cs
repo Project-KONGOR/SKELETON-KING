@@ -1,4 +1,6 @@
-﻿namespace KINESIS;
+﻿using KINESIS.Client;
+
+namespace KINESIS;
 
 public class ClientInformation
 {
@@ -89,6 +91,11 @@ public class ConnectedClient : IConnectedSubject
         });
     }
 
+    /// <summary>
+    ///     Notifies the ConnectedClient that the client has joined a specified chat channel.
+    /// </summary>
+    /// <param name="chatChannel">The chat channel that the client has joined.</param>
+    /// <param name="response">A notification to send back to the client.</param>
     public void NotifyAddedToChatChannel(ChatChannel chatChannel, ProtocolResponse response)
     {
         lock (this)
@@ -98,6 +105,16 @@ public class ConnectedClient : IConnectedSubject
         _chatServerConnection.EnqueueResponse(response);
     }
 
+    /// <summary>
+    ///     Notifies the ConnectedClient that the client has been either willingly or forcefully removed from a chat channel.
+    ///     When the client willingly leaves the channel, we do not necessarily need to notify them about it, in which case 
+    ///     the <paramref name="response"/> can be null.
+    /// </summary>
+    /// <param name="chatChannel">The chat channel that the client has left.</param>
+    /// <param name="response">An optional notification to send back to the client.</param>
+
+    // 
+    // response para
     public void NotifyRemovedFromChatChannel(ChatChannel chatChannel, ProtocolResponse? response)
     {
         lock (this)
