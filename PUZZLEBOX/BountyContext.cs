@@ -14,7 +14,8 @@ public class BountyContext : IdentityDbContext<ElementUser>
     public DbSet<PlayerSeasonStatsRankedCasual> PlayerSeasonStatsRankedCasual { get; set; }
     public DbSet<PlayerSeasonStatsMidWars> PlayerSeasonStatsMidWars { get; set; }
     public DbSet<PlayerSeasonStatsGrimmsCrossing> PlayerSeasonStatsGrimmsCrossing { get; set; }
-
+    public DbSet<IncidentReport> IncidentReports { get; set; }
+    
     public DbSet<Clan> Clans { get; set; }
 
     public DbSet<CloudStorage> CloudStorages { get; set; }
