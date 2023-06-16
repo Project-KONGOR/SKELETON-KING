@@ -51,4 +51,18 @@ public class Account
 
     [StringLength(32)]
     public string? Cookie { get; set; }
+
+    [Required]
+    public PlayerSeasonStatsRanked PlayerSeasonStatsRanked { get; set; }
+
+    [Required]
+    public PlayerSeasonStatsRankedCasual PlayerSeasonStatsRankedCasual { get; set; }
+
+    [Required]
+    public PlayerSeasonStatsPublic PlayerSeasonStatsPublic { get; set; }
+
+    [Required]
+    public PlayerSeasonStatsMidWars PlayerSeasonStatsMidWars { get; set; }
+
+    public PlayerSeasonStatsGrimmsCrossing? PlayerSeasonStatsGrimmsCrossing { get; set; }
 }
