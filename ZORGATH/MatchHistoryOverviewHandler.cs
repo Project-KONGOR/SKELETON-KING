@@ -12,7 +12,7 @@ public class MatchHistoryOverviewHandler : IClientRequesterHandler
         using BountyContext bountyContext = controllerContext.HttpContext.RequestServices.GetRequiredService<BountyContext>();
         if (!await bountyContext.Accounts.AnyAsync(account => account.Cookie == cookie))
         {
-            // Access denies due to missing cookie.
+            // Access denies due to invalid cookie.
             return new UnauthorizedResult();
         }
 

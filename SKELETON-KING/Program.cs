@@ -27,6 +27,7 @@ public class Program
             {
                 // NOTE: Please keep this list alphabetized by the string literal in the key.
                 {"autocompleteNicks", new AutoCompleteNicksHandler() },
+                {"get_match_stats", new GetMatchStatsHandler(replayServerUrl: "http://api.kongor.online") },
                 {"match_history_overview", new MatchHistoryOverviewHandler() },
                 {"pre_auth", new PreAuthHandler(srpAuthSessions) },
                 {"show_simple_stats", new ShowSimpleStatsHandler() },
