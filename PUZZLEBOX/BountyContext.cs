@@ -7,6 +7,7 @@ public class BountyContext : IdentityDbContext<ElementUser>
     public DbSet<Account> Accounts { get; set; } = null!;
     public DbSet<Friend> Friends { get; set; } = null!;
     public DbSet<Notification> Notifications { get; set; } = null!;
+    public DbSet<MatchResults> MatchResults { get; set; } = null!;
     public DbSet<PlayerMatchResults> PlayerMatchResults { get; set; } = null!;
     public DbSet<PlayerSeasonStatsRanked> PlayerSeasonStatsRanked { get; set; } = null!;
     public DbSet<PlayerSeasonStatsPublic> PlayerSeasonStatsPublic { get; set; } = null!;
