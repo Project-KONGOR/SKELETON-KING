@@ -7,6 +7,11 @@ public class BountyContext : IdentityDbContext<ElementUser>
     public DbSet<Account> Accounts { get; set; } = null!;
     public DbSet<Friend> Friends { get; set; } = null!;
     public DbSet<Notification> Notifications { get; set; } = null!;
+    public DbSet<PlayerMatchResults> PlayerMatchResults { get; set; } = null!;
+    public DbSet<PlayerSeasonStatsRanked> PlayerSeasonStatsRanked { get; set; } = null!;
+    public DbSet<PlayerSeasonStatsPublic> PlayerSeasonStatsPublic { get; set; } = null!;
+    public DbSet<PlayerSeasonStatsRankedCasual> PlayerSeasonStatsRankedCasual { get; set; } = null!;
+    public DbSet<PlayerSeasonStatsMidWars> PlayerSeasonStatsMidWars { get; set; } = null!;
 
     public DbSet<Clan> Clans { get; set; } = null!;
 
@@ -15,6 +20,8 @@ public class BountyContext : IdentityDbContext<ElementUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<PlayerMatchResults>().HasKey("match_id", "nickname");
 
         EntityTypeBuilder<Friend> friendEntity = modelBuilder.Entity<Friend>();
         friendEntity.HasOne(friend => friend.FriendAccount).WithMany().HasForeignKey("FriendAccountId");
