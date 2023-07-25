@@ -1,3 +1,5 @@
+# Ignore local editor data
+.idea
 .vs
 KINESIS/bin
 KINESIS/obj
