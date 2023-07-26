@@ -1,4 +1,7 @@
-﻿namespace ZORGATH;
+﻿using ZORGATH.GameAPI.Features.Auth.Handlers;
+using ZORGATH.GameAPI.Features.Auth.Helpers;
+
+namespace ZORGATH;
 
 [TestClass]
 public class PreAuthHandlerTest

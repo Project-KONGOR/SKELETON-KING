@@ -1,4 +1,6 @@
-﻿namespace ZORGATH;
+﻿using ZORGATH.GameAPI.Support;
+
+namespace ZORGATH;
 
 [TestClass]
 public class ChampionsOfNewerthRanksTest

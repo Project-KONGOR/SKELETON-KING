@@ -1,4 +1,8 @@
-﻿namespace ZORGATH;
+﻿using ZORGATH.GameAPI;
+using ZORGATH.GameAPI.Features.Auth.Responses;
+using ZORGATH.GameAPI.Support;
+
+namespace ZORGATH;
 
 [TestClass]
 public class PHPTest

@@ -1,4 +1,6 @@
-﻿namespace ZORGATH;
+﻿using ZORGATH.GameAPI.Features.Auth.Responses;
+
+namespace ZORGATH;
 
 [TestClass]
 public class AccountStatsTest

@@ -1,4 +1,7 @@
-﻿namespace ZORGATH;
+﻿using ZORGATH.GameAPI;
+using ZORGATH.GameAPI.Support;
+
+namespace ZORGATH;
 
 [TestClass]
 public class ClientRequesterControllerTest

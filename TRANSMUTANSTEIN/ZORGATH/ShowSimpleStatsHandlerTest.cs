@@ -1,3 +1,5 @@
+using ZORGATH.GameAPI.Features.Misc.Handlers;
+
 namespace ZORGATH;
 
 [TestClass]
