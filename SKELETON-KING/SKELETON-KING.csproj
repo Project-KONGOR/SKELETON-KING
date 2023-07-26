@@ -29,4 +29,10 @@
     <ProjectReference Include="..\ZORGATH\ZORGATH.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Migrations\20230726002351_ImportBountyDatabaseSchema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
