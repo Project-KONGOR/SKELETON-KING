@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using KINESIS;
 using PUZZLEBOX;
 using System.Collections.Concurrent;
-using ZORGATH;
-
+using ZORGATH.GameAPI.Features.Auth.Handlers;
+using ZORGATH.GameAPI.Features.Auth.Helpers;
+using ZORGATH.GameAPI.Features.Misc.Handlers;
+using ZORGATH.GameAPI.Support;
 public class Program
 {
     public static void Main(string[] args)
