@@ -26,4 +26,8 @@
     <ProjectReference Include="..\PUZZLEBOX\PUZZLEBOX.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WebAPI\" />
+  </ItemGroup>
+
 </Project>

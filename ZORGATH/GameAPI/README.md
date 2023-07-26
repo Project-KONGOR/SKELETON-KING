@@ -1,10 +1,12 @@
-# Folder structure
+# Folder structure for GameAPI
 
+There is 44+ different cases, those should be grouped into their respective "domain" or "group"
 
+For example `srpAuth` `preAuth` `auth` `switch_accounts` and `logout` could all be grouped as `auth`, whilst `delete_notification` and `remote_all_notifications` could be grouped as `notifications`  etc
 
-### There is 44-46 different cases, those should be grouped into their respective "domain" or "group"
+Also, some things can't be grouped, they could live in `misc`,
 
-
+*The current list of possible actions for master server actions*
 ```
 add_room
 auth

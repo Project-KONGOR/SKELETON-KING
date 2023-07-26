@@ -1,4 +1,5 @@
 ﻿using ZORGATH.GameAPI.Features.Misc.Responses;
+using ZORGATH.GameAPI.Support;
 
 namespace ZORGATH.GameAPI.Features.Misc.Handlers;
 

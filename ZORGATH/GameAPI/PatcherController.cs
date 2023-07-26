@@ -1,4 +1,4 @@
-﻿using ZORGATH.Support;
+﻿using ZORGATH.GameAPI.Support;
 
 namespace ZORGATH.GameAPI;
 
