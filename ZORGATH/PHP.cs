@@ -1,4 +1,6 @@
-﻿namespace ZORGATH;
+﻿using System.Globalization;
+
+namespace ZORGATH;
 
 /// <summary>
 /// Custom PHP serialization library that focuses on performance while fixing some of the issues that PhpSerializerNET has:
@@ -188,16 +190,13 @@ public class PHP
     {
         sb.Append('d');
         sb.Append(':');
-        sb.Append(value);
+        sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", value);
         sb.Append(';');
     }
 
     private static void AppendFloat(StringBuilder sb, double value)
     {
-        sb.Append('d');
-        sb.Append(':');
-        sb.Append(value);
-        sb.Append(';');
+        AppendDouble(sb, value);
     }
 
     private static void AppendBool(StringBuilder sb, bool value)

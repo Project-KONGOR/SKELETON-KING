@@ -1,4 +1,6 @@
-﻿namespace ZORGATH;
+﻿using System.Globalization;
+
+namespace ZORGATH;
 
 [TestClass]
 public class PHPTest
@@ -57,6 +59,21 @@ public class PHPTest
         };
         Assert.AreEqual(
             "a:2:{s:10:\"account_id\";s:5:\"12345\";s:12:\"account_name\";s:7:\"Maliken\";}",
+            PHP.Serialize(dictionary));
+    }
+
+    [TestMethod]
+    public void NonStandardCulture()
+    {
+        System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("is-IS");
+
+        Dictionary<string, object?> dictionary = new()
+        {
+            ["double"] = double.MaxValue,
+            ["float"] = float.MaxValue,
+        };
+        Assert.AreEqual(
+            "a:2:{s:6:\"double\";d:1.7976931348623157E+308;s:5:\"float\";d:3.4028234663852886E+38;}",
             PHP.Serialize(dictionary));
     }
 
