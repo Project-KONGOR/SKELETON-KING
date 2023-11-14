@@ -16,7 +16,7 @@ public class Program
         string connectionString = builder.Configuration.GetConnectionString("BOUNTY")!;
         builder.Services.AddDbContextFactory<BountyContext>(options =>
         {
-            options.UseSqlServer(connectionString, connection => connection.MigrationsAssembly("SKELETON-KING"));
+            options.UseSqlServer(connectionString, connection => connection.MigrationsAssembly("SKELETON-KING")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         ConcurrentDictionary<string, SrpAuthSessionData> srpAuthSessions = new();

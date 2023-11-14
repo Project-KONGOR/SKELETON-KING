@@ -105,7 +105,6 @@ public class ShowSimpleStatsHandler : IClientRequesterHandler
                 /* SeasonNormal: */ new SeasonShortSummary(account.PlayerSeasonStatsRanked.Wins + account.PlayerSeasonStatsMidWars.Wins, account.PlayerSeasonStatsRanked.Losses + account.PlayerSeasonStatsMidWars.Losses, 0, 0),
                 /* SeasonCasual: */ new SeasonShortSummary(account.PlayerSeasonStatsRankedCasual.Wins, account.PlayerSeasonStatsRankedCasual.Losses, 0, 0))
             )
-            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         if (data is null)
