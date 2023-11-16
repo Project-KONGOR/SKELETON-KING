@@ -2,9 +2,16 @@
 
 class CombinedPlayerAwardSummary
 {
-    public int MVP;
-    public List<string> Top4Names;
-    public List<int> Top4Nums;
+    public readonly int MVP;
+    public readonly List<string> Top4Names;
+    public readonly List<int> Top4Nums;
+
+    CombinedPlayerAwardSummary(int mvp, List<string> top4Names, List<int> top4Nums)
+    {
+        MVP = mvp;
+        Top4Names = top4Names;
+        Top4Nums = top4Nums;
+    }
 
     public static CombinedPlayerAwardSummary AddUp(PlayerAwardSummary pas1, PlayerAwardSummary pas2, PlayerAwardSummary pas3, PlayerAwardSummary pas4)
     {
@@ -38,12 +45,7 @@ class CombinedPlayerAwardSummary
         awardToCount.Add(new KeyValuePair<int, string>(playerAwardSummary.TopCreepScore, "awd_hcs"));
 
         awardToCount.Sort((a, b) => -a.Key.CompareTo(b.Key));
-        return new CombinedPlayerAwardSummary()
-        {
-            MVP = playerAwardSummary.MVP,
-            Top4Names = awardToCount.Select(a => a.Value).Take(4).ToList(),
-            Top4Nums = awardToCount.Select(a => a.Key).Take(4).ToList(),
-        };
+        return new CombinedPlayerAwardSummary(mvp: playerAwardSummary.MVP, top4Names: awardToCount.Select(a => a.Value).Take(4).ToList(), top4Nums: awardToCount.Select(a => a.Key).Take(4).ToList());
     }
 }
 
